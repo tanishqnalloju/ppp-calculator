@@ -145,10 +145,10 @@
     const hasTypical = global.PPP.tax && global.PPP.tax.hasTypicalExtra(iso3);
 
     const opts = [
-      ("none", "None"),
-      ("standard", "Standard"),
-      ("typical", "Typical extra"),
-      ("custom", "Custom"),
+      ["none", "None"],
+      ["standard", "Standard"],
+      ["typical", "Typical extra"],
+      ["custom", "Custom"],
     ].filter(([v]) => v !== "typical" || hasTypical || mode === "typical")
      .map(([v, lab]) =>
        `<option value="${v}"${mode === v ? " selected" : ""}${v === "typical" && !hasTypical ? " disabled" : ""}>${lab}</option>`
