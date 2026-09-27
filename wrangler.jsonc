@@ -1,0 +1,15 @@
+{
+  // PPP Calculator — static assets via Workers
+  // Public (planned): ppp.tanishqnalloju.com
+  "name": "ppp-calculator",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "not_found_handling": "single-page-application",
+    "html_handling": "auto-trailing-slash"
+  }
+}

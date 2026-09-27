@@ -1,0 +1,775 @@
+{
+  "meta": {
+    "generated_at": "2026-09-27T00:17:40Z",
+    "as_of": "2026-07",
+    "as_of_detail": {
+      "big_mac": "2026-07",
+      "petrol": "2026-09",
+      "numbeo_ind": "2026-09 (live fetch prior to rate limit)"
+    },
+    "sources": [
+      {
+        "name": "The Economist Big Mac Index",
+        "url": "https://github.com/TheEconomist/big-mac-data",
+        "csv": "https://raw.githubusercontent.com/TheEconomist/big-mac-data/master/output-data/big-mac-full-index.csv"
+      },
+      {
+        "name": "GlobalPetrolPrices.com",
+        "url": "https://www.globalpetrolprices.com/",
+        "notes": "Gasoline local price per liter; weekly update."
+      },
+      {
+        "name": "Numbeo Cost of Living (country averages)",
+        "url": "https://www.numbeo.com/cost-of-living/",
+        "notes": "Crowdsourced; IND only in this bake due to rate limit. Rice converted lb→kg."
+      }
+    ],
+    "notes": "Illustrative local prices; not a full CPI basket. Prefer honest partial coverage. Big Mac as_of 2026-07 (63 countries). Petrol as_of 2026-09 (37 countries). Grocery items beyond Big Mac currently limited where Numbeo was reachable.",
+    "gaps": [
+      "Numbeo live scrape rate-limited (HTTP 429 until ~2026-10-01); only IND groceries from a prior successful fetch.",
+      "Wayback Machine CDX unavailable (503/timeout) during build — could not backfill other Numbeo country pages.",
+      "Mobile prepaid 1GB not consistently published on Numbeo country pages — omitted.",
+      "No grocery basket (rice/bread/milk/eggs) for USA — Big Mac and/or petrol only where available.",
+      "No grocery basket (rice/bread/milk/eggs) for BGD — Big Mac and/or petrol only where available.",
+      "No grocery basket (rice/bread/milk/eggs) for GBR — Big Mac and/or petrol only where available.",
+      "No grocery basket (rice/bread/milk/eggs) for DEU — Big Mac and/or petrol only where available.",
+      "No grocery basket (rice/bread/milk/eggs) for JPN — Big Mac and/or petrol only where available.",
+      "No grocery basket (rice/bread/milk/eggs) for BRA — Big Mac and/or petrol only where available.",
+      "No grocery basket (rice/bread/milk/eggs) for MEX — Big Mac and/or petrol only where available.",
+      "No grocery basket (rice/bread/milk/eggs) for NGA — Big Mac and/or petrol only where available.",
+      "No grocery basket (rice/bread/milk/eggs) for PHL — Big Mac and/or petrol only where available."
+    ],
+    "coverage": {
+      "countries_with_any_price": 67,
+      "big_mac_countries": 63,
+      "petrol_countries": 37,
+      "grocery_countries": 1
+    }
+  },
+  "items": [
+    {
+      "id": "big_mac",
+      "name": "Big Mac",
+      "unit": "1 sandwich",
+      "category": "food"
+    },
+    {
+      "id": "rice",
+      "name": "White rice",
+      "unit": "1 kg",
+      "category": "food"
+    },
+    {
+      "id": "bread",
+      "name": "White bread",
+      "unit": "1 loaf",
+      "category": "food"
+    },
+    {
+      "id": "milk",
+      "name": "Milk",
+      "unit": "1 L",
+      "category": "food"
+    },
+    {
+      "id": "eggs",
+      "name": "Eggs",
+      "unit": "1 dozen",
+      "category": "food"
+    },
+    {
+      "id": "petrol",
+      "name": "Gasoline",
+      "unit": "1 L",
+      "category": "transport"
+    },
+    {
+      "id": "cappuccino",
+      "name": "Cappuccino",
+      "unit": "1 cup",
+      "category": "food"
+    },
+    {
+      "id": "broadband",
+      "name": "Broadband internet",
+      "unit": "1 month (60 Mbps+)",
+      "category": "comms"
+    }
+  ],
+  "prices": {
+    "ARE": {
+      "big_mac": {
+        "local": 19.0,
+        "currency": "AED",
+        "usd": 5.1731
+      }
+    },
+    "ARG": {
+      "big_mac": {
+        "local": 8700.0,
+        "currency": "ARS",
+        "usd": 5.9064
+      },
+      "petrol": {
+        "local": 452.86,
+        "currency": "ARS",
+        "usd": 1.44
+      }
+    },
+    "AUS": {
+      "big_mac": {
+        "local": 8.5,
+        "currency": "AUD",
+        "usd": 5.9496
+      },
+      "petrol": {
+        "local": 1.54,
+        "currency": "AUD",
+        "usd": 1.59
+      }
+    },
+    "AUT": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      }
+    },
+    "AZE": {
+      "big_mac": {
+        "local": 7.25,
+        "currency": "AZN",
+        "usd": 4.2647
+      }
+    },
+    "BEL": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      }
+    },
+    "BGD": {
+      "petrol": {
+        "local": 104.95,
+        "currency": "BDT",
+        "usd": 1.34
+      }
+    },
+    "BHR": {
+      "big_mac": {
+        "local": 1.8,
+        "currency": "BHD",
+        "usd": 4.7739
+      }
+    },
+    "BRA": {
+      "big_mac": {
+        "local": 23.9,
+        "currency": "BRL",
+        "usd": 4.7053
+      },
+      "petrol": {
+        "local": 5.22,
+        "currency": "BRL",
+        "usd": 1.28
+      }
+    },
+    "CAN": {
+      "big_mac": {
+        "local": 8.17,
+        "currency": "CAD",
+        "usd": 5.8143
+      },
+      "petrol": {
+        "local": 1.56,
+        "currency": "CAD",
+        "usd": 1.49
+      }
+    },
+    "CHE": {
+      "big_mac": {
+        "local": 7.3,
+        "currency": "CHF",
+        "usd": 9.0419
+      },
+      "petrol": {
+        "local": 1.66,
+        "currency": "CHF",
+        "usd": 2.6
+      }
+    },
+    "CHL": {
+      "big_mac": {
+        "local": 4990.0,
+        "currency": "CLP",
+        "usd": 5.408
+      },
+      "petrol": {
+        "local": 56.9,
+        "currency": "CLP",
+        "usd": 1.5
+      }
+    },
+    "CHN": {
+      "big_mac": {
+        "local": 26.5,
+        "currency": "CNY",
+        "usd": 3.9139
+      },
+      "petrol": {
+        "local": 7.66,
+        "currency": "CNY",
+        "usd": 1.33
+      }
+    },
+    "COL": {
+      "big_mac": {
+        "local": 25900.0,
+        "currency": "COP",
+        "usd": 8.003
+      },
+      "petrol": {
+        "local": 903.95,
+        "currency": "COP",
+        "usd": 1.31
+      }
+    },
+    "CRI": {
+      "big_mac": {
+        "local": 3150.0,
+        "currency": "CRC",
+        "usd": 6.9956
+      }
+    },
+    "CZE": {
+      "big_mac": {
+        "local": 115.0,
+        "currency": "CZK",
+        "usd": 5.4341
+      }
+    },
+    "DEU": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      },
+      "petrol": {
+        "local": 1.58,
+        "currency": "EUR",
+        "usd": 2.61
+      }
+    },
+    "DNK": {
+      "big_mac": {
+        "local": 46.0,
+        "currency": "DKK",
+        "usd": 7.0373
+      }
+    },
+    "EGY": {
+      "big_mac": {
+        "local": 145.0,
+        "currency": "EGP",
+        "usd": 2.8696
+      },
+      "petrol": {
+        "local": 11.31,
+        "currency": "EGP",
+        "usd": 0.47
+      }
+    },
+    "ESP": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      },
+      "petrol": {
+        "local": 1.43,
+        "currency": "EUR",
+        "usd": 2.21
+      }
+    },
+    "FIN": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      }
+    },
+    "FRA": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      },
+      "petrol": {
+        "local": 1.62,
+        "currency": "EUR",
+        "usd": 2.46
+      }
+    },
+    "GBR": {
+      "big_mac": {
+        "local": 5.49,
+        "currency": "GBP",
+        "usd": 7.4002
+      },
+      "petrol": {
+        "local": 1.35,
+        "currency": "GBP",
+        "usd": 2.3
+      }
+    },
+    "GHA": {
+      "petrol": {
+        "local": 9.29,
+        "currency": "GHS",
+        "usd": 1.55
+      }
+    },
+    "GTM": {
+      "big_mac": {
+        "local": 34.0,
+        "currency": "GTQ",
+        "usd": 4.462
+      }
+    },
+    "HKG": {
+      "big_mac": {
+        "local": 25.5,
+        "currency": "HKD",
+        "usd": 3.253
+      }
+    },
+    "HND": {
+      "big_mac": {
+        "local": 139.0,
+        "currency": "HNL",
+        "usd": 5.1924
+      }
+    },
+    "HUN": {
+      "big_mac": {
+        "local": 1660.0,
+        "currency": "HUF",
+        "usd": 5.2976
+      }
+    },
+    "IDN": {
+      "big_mac": {
+        "local": 43000.0,
+        "currency": "IDR",
+        "usd": 2.3803
+      },
+      "petrol": {
+        "local": 647.67,
+        "currency": "IDR",
+        "usd": 1.07
+      }
+    },
+    "IND": {
+      "big_mac": {
+        "local": 236.25,
+        "currency": "INR",
+        "usd": 2.4542
+      },
+      "petrol": {
+        "local": 91.18,
+        "currency": "INR",
+        "usd": 1.14
+      },
+      "milk": {
+        "local": 61.96,
+        "currency": "INR",
+        "usd": null
+      },
+      "bread": {
+        "local": 40.85,
+        "currency": "INR",
+        "usd": null
+      },
+      "rice": {
+        "local": 61.9719,
+        "currency": "INR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 87.34,
+        "currency": "INR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 162.74,
+        "currency": "INR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 673.62,
+        "currency": "INR",
+        "usd": null
+      }
+    },
+    "IRL": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      }
+    },
+    "ISR": {
+      "big_mac": {
+        "local": 23.0,
+        "currency": "ILS",
+        "usd": 7.6685
+      }
+    },
+    "ITA": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      },
+      "petrol": {
+        "local": 1.68,
+        "currency": "EUR",
+        "usd": 2.47
+      }
+    },
+    "JOR": {
+      "big_mac": {
+        "local": 2.5,
+        "currency": "JOD",
+        "usd": 3.5261
+      }
+    },
+    "JPN": {
+      "big_mac": {
+        "local": 500.0,
+        "currency": "JPY",
+        "usd": 3.0838
+      },
+      "petrol": {
+        "local": 154.75,
+        "currency": "JPY",
+        "usd": 1.08
+      }
+    },
+    "KEN": {
+      "petrol": {
+        "local": 144.54,
+        "currency": "KES",
+        "usd": 1.64
+      }
+    },
+    "KOR": {
+      "big_mac": {
+        "local": 5700.0,
+        "currency": "KRW",
+        "usd": 3.8361
+      },
+      "petrol": {
+        "local": 605.68,
+        "currency": "KRW",
+        "usd": 1.41
+      }
+    },
+    "KWT": {
+      "big_mac": {
+        "local": 1.4,
+        "currency": "KWD",
+        "usd": 4.5234
+      }
+    },
+    "LBN": {
+      "big_mac": {
+        "local": 480000.0,
+        "currency": "LBP",
+        "usd": 5.3601
+      }
+    },
+    "MDA": {
+      "big_mac": {
+        "local": 80.0,
+        "currency": "MDL",
+        "usd": 4.5584
+      }
+    },
+    "MEX": {
+      "big_mac": {
+        "local": 109.0,
+        "currency": "MXN",
+        "usd": 6.2694
+      },
+      "petrol": {
+        "local": 22.14,
+        "currency": "MXN",
+        "usd": 1.64
+      }
+    },
+    "MYS": {
+      "big_mac": {
+        "local": 14.55,
+        "currency": "MYR",
+        "usd": 3.5679
+      },
+      "petrol": {
+        "local": 2.15,
+        "currency": "MYR",
+        "usd": 1.07
+      }
+    },
+    "NGA": {
+      "petrol": {
+        "local": 395.07,
+        "currency": "NGN",
+        "usd": 1.01
+      }
+    },
+    "NIC": {
+      "big_mac": {
+        "local": 187.0,
+        "currency": "NIO",
+        "usd": 5.1059
+      }
+    },
+    "NLD": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      },
+      "petrol": {
+        "local": 1.82,
+        "currency": "EUR",
+        "usd": 2.78
+      }
+    },
+    "NOR": {
+      "big_mac": {
+        "local": 78.0,
+        "currency": "NOK",
+        "usd": 8.0532
+      }
+    },
+    "NZL": {
+      "big_mac": {
+        "local": 8.8,
+        "currency": "NZD",
+        "usd": 5.1361
+      }
+    },
+    "OMN": {
+      "big_mac": {
+        "local": 1.53,
+        "currency": "OMR",
+        "usd": 3.9735
+      }
+    },
+    "PAK": {
+      "big_mac": {
+        "local": 1080.0,
+        "currency": "PKR",
+        "usd": 3.8859
+      },
+      "petrol": {
+        "local": 174.74,
+        "currency": "PKR",
+        "usd": 1.42
+      }
+    },
+    "PER": {
+      "big_mac": {
+        "local": 16.9,
+        "currency": "PEN",
+        "usd": 4.9916
+      },
+      "petrol": {
+        "local": 4.2,
+        "currency": "PEN",
+        "usd": 1.71
+      }
+    },
+    "PHL": {
+      "big_mac": {
+        "local": 169.0,
+        "currency": "PHP",
+        "usd": 2.7397
+      },
+      "petrol": {
+        "local": 58.46,
+        "currency": "PHP",
+        "usd": 1.46
+      }
+    },
+    "POL": {
+      "big_mac": {
+        "local": 23.5,
+        "currency": "PLN",
+        "usd": 6.2183
+      },
+      "petrol": {
+        "local": 5.57,
+        "currency": "PLN",
+        "usd": 2.08
+      }
+    },
+    "PRT": {
+      "big_mac": {
+        "local": 6.19,
+        "currency": "EUR",
+        "usd": 7.07922094259998,
+        "note": "Euro-area average (Economist EUZ)"
+      }
+    },
+    "QAT": {
+      "big_mac": {
+        "local": 18.0,
+        "currency": "QAR",
+        "usd": 4.9437
+      }
+    },
+    "ROU": {
+      "big_mac": {
+        "local": 18.35,
+        "currency": "RON",
+        "usd": 4.0051
+      }
+    },
+    "SAU": {
+      "big_mac": {
+        "local": 19.0,
+        "currency": "SAR",
+        "usd": 5.0599
+      },
+      "petrol": {
+        "local": 2.01,
+        "currency": "SAR",
+        "usd": 0.62
+      }
+    },
+    "SGP": {
+      "big_mac": {
+        "local": 7.45,
+        "currency": "SGD",
+        "usd": 5.775
+      },
+      "petrol": {
+        "local": 2.44,
+        "currency": "SGD",
+        "usd": 2.44
+      }
+    },
+    "SWE": {
+      "big_mac": {
+        "local": 69.0,
+        "currency": "SEK",
+        "usd": 7.1614
+      },
+      "petrol": {
+        "local": 16.63,
+        "currency": "SEK",
+        "usd": 1.79
+      }
+    },
+    "THA": {
+      "big_mac": {
+        "local": 135.0,
+        "currency": "THB",
+        "usd": 4.0155
+      },
+      "petrol": {
+        "local": 39.55,
+        "currency": "THB",
+        "usd": 1.48
+      }
+    },
+    "TUR": {
+      "big_mac": {
+        "local": 325.0,
+        "currency": "TRY",
+        "usd": 6.9109
+      },
+      "petrol": {
+        "local": 22.11,
+        "currency": "TRY",
+        "usd": 1.65
+      }
+    },
+    "TWN": {
+      "big_mac": {
+        "local": 78.0,
+        "currency": "TWD",
+        "usd": 2.4233
+      }
+    },
+    "UKR": {
+      "big_mac": {
+        "local": 149.0,
+        "currency": "UAH",
+        "usd": 3.3356
+      }
+    },
+    "URY": {
+      "big_mac": {
+        "local": 359.0,
+        "currency": "UYU",
+        "usd": 8.9381
+      }
+    },
+    "USA": {
+      "big_mac": {
+        "local": 6.22,
+        "currency": "USD",
+        "usd": 6.22
+      },
+      "petrol": {
+        "local": 0.88,
+        "currency": "USD",
+        "usd": 0.88
+      }
+    },
+    "VEN": {
+      "big_mac": {
+        "local": 3267.0,
+        "currency": "VES",
+        "usd": 4.5072
+      }
+    },
+    "VNM": {
+      "big_mac": {
+        "local": 76000.0,
+        "currency": "VND",
+        "usd": 2.8946
+      },
+      "petrol": {
+        "local": 217.5,
+        "currency": "VND",
+        "usd": 1.02
+      }
+    },
+    "ZAF": {
+      "big_mac": {
+        "local": 56.9,
+        "currency": "ZAR",
+        "usd": 3.4855
+      },
+      "petrol": {
+        "local": 18.58,
+        "currency": "ZAR",
+        "usd": 1.64
+      }
+    }
+  }
+}

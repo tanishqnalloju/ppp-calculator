@@ -1,0 +1,15 @@
+{
+  "name": "ppp-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PPP Calculator — Same money. Different prices. (Cloudflare Workers assets)",
+  "scripts": {
+    "sync-assets": "mkdir -p public/data && cp index.html public/index.html && cp app.js public/app.js && cp styles.css public/styles.css && cp robots.txt public/robots.txt && cp sitemap.xml public/sitemap.xml && cp favicon.svg public/favicon.svg && cp data/countries.json public/data/countries.json && cp data/commodities.json public/data/commodities.json",
+    "deploy": "npm run sync-assets && wrangler deploy",
+    "dev": "npm run sync-assets && wrangler dev"
+  },
+  "devDependencies": {
+    "wrangler": "^4.34.0"
+  },
+  "license": "MIT"
+}
