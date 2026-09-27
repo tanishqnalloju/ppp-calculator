@@ -508,6 +508,63 @@ details.tax-col[open] .tax-chevron {
   border-top: 1px solid var(--border);
   padding-top: var(--space-3);
 }
+
+.tax-summary-both {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  flex: 1;
+  justify-content: flex-end;
+}
+.tax-sum-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 8.5rem;
+}
+.tax-sum-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.tax-details-both {
+  display: block;
+}
+.tax-block {
+  border-top: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  padding-top: 0.75rem;
+}
+.tax-block:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+.tax-block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+.tax-block-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+@media (min-width: 640px) {
+  .tax-details-both .tax-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.25rem;
+  }
+  .tax-details-both .tax-block {
+    border-top: none;
+    padding-top: 0;
+  }
+}
+
 [data-theme="dark"] details.tax-col {
   background: var(--surface-answer);
   border-color: var(--border-answer);

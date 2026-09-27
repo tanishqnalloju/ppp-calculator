@@ -181,7 +181,31 @@
       effectiveRate: 0,
       supported: false,
       notes: null,
+      rebate: 0,
+      cess: 0,
+      pitBeforeRebate: 0,
     }, extras || {});
+  }
+
+
+  function applyRebate(pit, totalIncome, rebate) {
+    if (!rebate || rebate.max_amount == null) {
+      return { pit, rebate: 0, label: null };
+    }
+    const income = Math.max(0, Number(totalIncome) || 0);
+    const cap = Number(rebate.max_total_income);
+    if (Number.isFinite(cap) && income > cap) {
+      return { pit, rebate: 0, label: rebate.label || "Rebate" };
+    }
+    const maxAmt = Math.max(0, Number(rebate.max_amount) || 0);
+    const reb = Math.min(Math.max(0, pit), maxAmt);
+    return { pit: Math.max(0, pit - reb), rebate: reb, label: rebate.label || "Rebate" };
+  }
+
+  function applyCess(taxBeforeCess, cess) {
+    if (!cess || cess.rate == null) return { cess: 0, total: taxBeforeCess, label: null };
+    const c = Math.max(0, taxBeforeCess) * (Number(cess.rate) || 0);
+    return { cess: c, total: taxBeforeCess + c, label: cess.label || "Cess" };
   }
 
   function grossToNet(gross, country, opts) {
@@ -221,16 +245,27 @@
     const deduction = deductionDetail(g, country, mode, customPct);
     const taxable = taxableIncome(g, country, mode, customPct);
     const br = pitBreakdown(taxable, country.brackets);
-    const pit = br.pit;
+    let pit = br.pit;
+    // Rebate uses total income after deductions (taxable + any zero-rated allowance already in brackets ≈ gross - explicit deduction)
+    const totalIncomeForRebate = taxable;
+    const reb = applyRebate(pit, totalIncomeForRebate, country.rebate);
+    pit = reb.pit;
+    const cessPart = applyCess(pit, country.cess);
+    const pitWithCess = cessPart.total;
     const ss = applyEmployeeSs(g, country.employee_ss);
-    const totalTax = pit + ss;
+    const totalTax = pitWithCess + ss;
     const net = g - totalTax;
     const effectiveRate = g > 0 ? totalTax / g : 0;
 
     return {
       gross: g,
       taxable,
-      pit,
+      pit: pitWithCess,
+      pitBeforeRebate: br.pit,
+      rebate: reb.rebate,
+      rebateLabel: reb.label,
+      cess: cessPart.cess,
+      cessLabel: cessPart.label,
       ss,
       totalTax,
       net,
@@ -242,6 +277,7 @@
       taxYear: country.tax_year || null,
       model: country.model || null,
       sourceName: country.source_name || null,
+      standardDeductionBasis: country.standard_deduction,
     };
   }
 
@@ -311,6 +347,8 @@
       pitOnTaxable,
       pitBreakdown,
       deductionDetail,
+      applyRebate,
+      applyCess,
       applyEmployeeSs,
       grossToNet,
       netToGross,

@@ -142,30 +142,43 @@
     return `${from}–${to} @ ${rate}`;
   }
 
-  function renderTaxSim(result, country, currency, iso3, title, openKey) {
+  function moneyOrDash(amount, currency, iso3) {
+    if (amount == null || !Number.isFinite(Number(amount))) return "—";
+    return global.PPP.fmtMoney(amount, currency, iso3);
+  }
+
+  /** Inner country block (no <details>) used inside the single tax collapsible. */
+  function renderTaxSimBlock(result, country, currency, iso3, title, metrics) {
     const escapeHtml = global.PPP.escapeHtml;
-    const open = !!(openKey && global.PPP._taxOpen && global.PPP._taxOpen[openKey]);
+    const year = result && result.taxYear ? ` · ${escapeHtml(result.taxYear)}` : "";
+    const taxStr = metrics && metrics.tax != null
+      ? escapeHtml(moneyOrDash(metrics.tax, currency, iso3))
+      : (result && result.supported ? escapeHtml(moneyOrDash(result.totalTax, currency, iso3)) : "—");
+    const netStr = metrics && metrics.net != null
+      ? escapeHtml(moneyOrDash(metrics.net, currency, iso3))
+      : (result && result.supported ? escapeHtml(moneyOrDash(result.net, currency, iso3)) : "—");
+
+    const head =
+      `<div class="tax-block">` +
+      `<div class="tax-block-head">` +
+      `<span class="tax-col-title">${escapeHtml(title)}${year}</span>` +
+      `<div class="tax-summary-metrics">` +
+      `<div class="tax-row"><span>Est. tax</span><b>${taxStr}</b></div>` +
+      `<div class="tax-row"><span>Est. net</span><b>${netStr}</b></div>` +
+      `</div></div>`;
 
     if (!result || !result.supported) {
       return (
-        `<details class="tax-col" data-tax-key="${escapeHtml(openKey || "")}"${open ? " open" : ""}>` +
-        `<summary class="tax-summary">` +
-        `<span class="tax-col-title">${escapeHtml(title)}</span>` +
-        `<div class="tax-summary-metrics">` +
-        `<div class="tax-row"><span>Est. tax</span><b>—</b></div>` +
-        `<div class="tax-row"><span>Est. net</span><b>—</b></div>` +
-        `</div>` +
-        `<span class="tax-chevron" aria-hidden="true"></span>` +
-        `</summary>` +
-        `<div class="tax-details">` +
-        `<p class="tax-unavailable">Model unavailable</p>` +
+        head +
+        `<div class="tax-block-body">` +
+        `<p class="tax-unavailable">${escapeHtml((metrics && metrics.unavailable) || "Model unavailable")}</p>` +
         (result && result.notes ? `<p class="tax-note">${escapeHtml(result.notes)}</p>` : "") +
-        `</div></details>`
+        ((metrics && metrics.note) ? `<p class="tax-note">${escapeHtml(metrics.note)}</p>` : "") +
+        `</div></div>`
       );
     }
 
     const ded = result.deduction || {};
-    const year = result.taxYear ? ` · ${escapeHtml(result.taxYear)}` : "";
     const model = result.model ? escapeHtml(result.model) : "PIT";
     let slicesHtml = "";
     if (result.slices && result.slices.length) {
@@ -182,22 +195,34 @@
       slicesHtml = `<p class="tax-note">No personal income tax in this model.</p>`;
     }
 
+    const rebateRow = result.rebate > 0
+      ? `<div class="tax-row"><span>${escapeHtml(result.rebateLabel || "Rebate")}</span>` +
+        `<b>−${escapeHtml(global.PPP.fmtMoney(result.rebate, currency, iso3))}</b></div>`
+      : "";
+    const cessRow = result.cess > 0
+      ? `<div class="tax-row"><span>${escapeHtml(result.cessLabel || "Cess")}</span>` +
+        `<b>${escapeHtml(global.PPP.fmtMoney(result.cess, currency, iso3))}</b></div>`
+      : "";
+    const pitBefore = (result.pitBeforeRebate != null && result.rebate > 0)
+      ? `<div class="tax-row"><span>PIT before rebate</span>` +
+        `<b>${escapeHtml(global.PPP.fmtMoney(result.pitBeforeRebate, currency, iso3))}</b></div>`
+      : "";
+    const sdBasis = (result.standardDeductionBasis != null && Number(result.standardDeductionBasis) > 0)
+      ? `<p class="tax-note">Standard deduction basis: ${escapeHtml(global.PPP.fmtMoney(result.standardDeductionBasis, currency, iso3))} (salaried assumption in this model).</p>`
+      : "";
+
     return (
-      `<details class="tax-col" data-tax-key="${escapeHtml(openKey || "")}"${open ? " open" : ""}>` +
-      `<summary class="tax-summary">` +
-      `<span class="tax-col-title">${escapeHtml(title)}${year}</span>` +
-      `<div class="tax-summary-metrics">` +
-      `<div class="tax-row"><span>Est. tax</span><b>${escapeHtml(global.PPP.fmtMoney(result.totalTax, currency, iso3))}</b></div>` +
-      `<div class="tax-row"><span>Est. net</span><b>${escapeHtml(global.PPP.fmtMoney(result.net, currency, iso3))}</b></div>` +
-      `</div>` +
-      `<span class="tax-chevron" aria-hidden="true"></span>` +
-      `</summary>` +
-      `<div class="tax-details">` +
+      head +
+      `<div class="tax-block-body">` +
       `<p class="tax-model-tag">${model}</p>` +
       `<div class="tax-row"><span>Gross</span><b>${escapeHtml(global.PPP.fmtMoney(result.gross, currency, iso3))}</b></div>` +
       `<div class="tax-row"><span>Deduction</span><b>${escapeHtml(global.PPP.fmtMoney(ded.amount || 0, currency, iso3))}</b></div>` +
       (ded.label ? `<p class="tax-note">${escapeHtml(ded.label)}</p>` : "") +
+      sdBasis +
       `<div class="tax-row"><span>Taxable</span><b>${escapeHtml(global.PPP.fmtMoney(result.taxable, currency, iso3))}</b></div>` +
+      pitBefore +
+      rebateRow +
+      cessRow +
       `<div class="tax-row"><span>Est. PIT</span><b>${escapeHtml(global.PPP.fmtMoney(result.pit, currency, iso3))}</b></div>` +
       (result.ss > 0
         ? `<div class="tax-row"><span>Est. employee SS</span><b>${escapeHtml(global.PPP.fmtMoney(result.ss, currency, iso3))}</b></div>`
@@ -205,7 +230,7 @@
       `<div class="tax-row"><span>Effective rate</span><b>${escapeHtml(fmtPct(result.effectiveRate))}</b></div>` +
       slicesHtml +
       (result.notes ? `<p class="tax-note" title="${escapeHtml(result.notes)}">${escapeHtml(result.notes)}</p>` : "") +
-      `</div></details>`
+      `</div></div>`
     );
   }
 
@@ -253,58 +278,69 @@
     }
 
     let homeBlock = "";
+    let homeSumTax = "—";
+    let homeSumNet = "—";
     if (itype === "gross" && homeSupported && homeTax && homeTax.supported) {
-      homeBlock = renderTaxSim(homeTax, homeTaxCountry, home.currency, home.iso3, `Home · ${home.name}`, "home");
+      homeBlock = renderTaxSimBlock(homeTax, homeTaxCountry, home.currency, home.iso3, `Home · ${home.name}`);
+      homeSumTax = escapeHtml(moneyOrDash(homeTax.totalTax, home.currency, home.iso3));
+      homeSumNet = escapeHtml(moneyOrDash(homeTax.net, home.currency, home.iso3));
     } else if (itype === "gross" && !homeSupported) {
-      homeBlock =
-        `<details class="tax-col" data-tax-key="home">` +
-        `<summary class="tax-summary">` +
-        `<span class="tax-col-title">Home · ${escapeHtml(home.name)}</span>` +
-        `<div class="tax-summary-metrics">` +
-        `<div class="tax-row"><span>Est. tax</span><b>—</b></div>` +
-        `<div class="tax-row"><span>Est. net</span><b>${escapeHtml(global.PPP.fmtMoney(netForPpp, home.currency, home.iso3))}</b></div>` +
-        `</div><span class="tax-chevron" aria-hidden="true"></span></summary>` +
-        `<div class="tax-details">` +
-        `<p class="tax-unavailable">Tax estimate unavailable</p>` +
-        `<p class="tax-note">Entered gross treated as take-home for PPP only (no brackets applied).</p>` +
-        `</div></details>`;
+      homeBlock = renderTaxSimBlock(
+        { supported: false, notes: null },
+        homeTaxCountry,
+        home.currency,
+        home.iso3,
+        `Home · ${home.name}`,
+        {
+          tax: null,
+          net: netForPpp,
+          unavailable: "Tax estimate unavailable",
+          note: "Entered gross treated as take-home for PPP only (no brackets applied).",
+        }
+      );
+      homeSumNet = escapeHtml(moneyOrDash(netForPpp, home.currency, home.iso3));
     } else {
-      homeBlock =
-        `<details class="tax-col" data-tax-key="home">` +
-        `<summary class="tax-summary">` +
-        `<span class="tax-col-title">Home · ${escapeHtml(home.name)}</span>` +
-        `<div class="tax-summary-metrics">` +
-        `<div class="tax-row"><span>Est. tax</span><b>—</b></div>` +
-        `<div class="tax-row"><span>Est. net</span><b>${escapeHtml(global.PPP.fmtMoney(netForPpp, home.currency, home.iso3))}</b></div>` +
-        `</div><span class="tax-chevron" aria-hidden="true"></span></summary>` +
-        `<div class="tax-details">` +
-        `<p class="tax-note">Net mode: take-home is used as-is for PPP. Switch to Gross for home tax simulation.</p>` +
-        `</div></details>`;
+      homeBlock = renderTaxSimBlock(
+        { supported: false, notes: null },
+        homeTaxCountry,
+        home.currency,
+        home.iso3,
+        `Home · ${home.name}`,
+        {
+          tax: null,
+          net: netForPpp,
+          unavailable: "Home tax simulation off",
+          note: "Net mode: take-home is used as-is for PPP. Switch to Gross for home tax simulation.",
+        }
+      );
+      homeSumNet = escapeHtml(moneyOrDash(netForPpp, home.currency, home.iso3));
     }
 
     let destBlock = "";
+    let destSumTax = "—";
+    let destSumNet = "—";
     if (destSupported && destGross && destGross.supported && destGross.gross != null) {
-      destBlock = renderTaxSim(
+      destBlock = renderTaxSimBlock(
         destGross,
         destTaxCountry,
         dest.currency,
         dest.iso3,
-        `Destination · ${dest.name} (gross-up)`,
-        "dest"
+        `Destination · ${dest.name} (gross-up)`
       );
+      destSumTax = escapeHtml(moneyOrDash(destGross.totalTax, dest.currency, dest.iso3));
+      destSumNet = escapeHtml(moneyOrDash(destGross.net, dest.currency, dest.iso3));
     } else {
-      destBlock =
-        `<details class="tax-col" data-tax-key="dest">` +
-        `<summary class="tax-summary">` +
-        `<span class="tax-col-title">Destination · ${escapeHtml(dest.name)}</span>` +
-        `<div class="tax-summary-metrics">` +
-        `<div class="tax-row"><span>Est. tax</span><b>—</b></div>` +
-        `<div class="tax-row"><span>Est. net</span><b>—</b></div>` +
-        `</div><span class="tax-chevron" aria-hidden="true"></span></summary>` +
-        `<div class="tax-details">` +
-        `<p class="tax-unavailable">Gross-up unavailable</p>` +
-        `<p class="tax-note">No illustrative PIT model for this destination (or tax data not loaded).</p>` +
-        `</div></details>`;
+      destBlock = renderTaxSimBlock(
+        { supported: false, notes: null },
+        destTaxCountry,
+        dest.currency,
+        dest.iso3,
+        `Destination · ${dest.name}`,
+        {
+          unavailable: "Gross-up unavailable",
+          note: "No illustrative PIT model for this destination (or tax data not loaded).",
+        }
+      );
     }
 
     const warnHtml = warnings.length
@@ -315,10 +351,27 @@
       ? "Deduction assumption applies to Gross home conversion and destination gross-up."
       : "Deduction controls are hidden in Net mode; destination gross-up uses the standard allowance only.";
 
+    const open = !!(global.PPP._taxOpen && global.PPP._taxOpen.both);
+
     panel.innerHTML =
       `<h2 class="tax-heading">Illustrative tax estimates</h2>` +
-      `<p class="tax-disclaimer">${dedNote} Expand a country for the full calculation.</p>` +
+      `<p class="tax-disclaimer">${dedNote} Expand for the full calculation.</p>` +
+      `<details class="tax-col" data-tax-key="both"${open ? " open" : ""}>` +
+      `<summary class="tax-summary">` +
+      `<span class="tax-col-title">Home &amp; destination</span>` +
+      `<div class="tax-summary-metrics tax-summary-both">` +
+      `<div class="tax-sum-pair"><span class="tax-sum-label">Home</span>` +
+      `<div class="tax-row"><span>Est. tax</span><b>${homeSumTax}</b></div>` +
+      `<div class="tax-row"><span>Est. net</span><b>${homeSumNet}</b></div></div>` +
+      `<div class="tax-sum-pair"><span class="tax-sum-label">Dest</span>` +
+      `<div class="tax-row"><span>Est. tax</span><b>${destSumTax}</b></div>` +
+      `<div class="tax-row"><span>Est. net</span><b>${destSumNet}</b></div></div>` +
+      `</div>` +
+      `<span class="tax-chevron" aria-hidden="true"></span>` +
+      `</summary>` +
+      `<div class="tax-details tax-details-both">` +
       `<div class="tax-grid">${homeBlock}${destBlock}</div>` +
+      `</div></details>` +
       warnHtml +
       `<p class="tax-disclaimer">Illustrative national/federal PIT model only. Local/state taxes and many social contributions are often excluded. <strong>Not tax advice</strong> — not personalized. Sources: PwC Worldwide Tax Summaries (see About / <code>data/taxes.json</code>).</p>`;
     bindTaxCollapse(panel);

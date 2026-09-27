@@ -10,7 +10,7 @@
       "name": "India",
       "currency": "INR",
       "supported": true,
-      "tax_year": "FY2025/26",
+      "tax_year": "FY 2025/26 (AY 2026/27)",
       "system": "progressive",
       "brackets": [
         {
@@ -46,8 +46,19 @@
       "allowance_in_brackets": false,
       "typical_extra_deduction": null,
       "employee_ss": null,
-      "notes": "New tax regime (default). Standard deduction ₹75,000. Health & education cess and surcharge excluded. Section 87A rebate (can zero tax up to ~₹12L taxable under current rules) not modeled — illustrative only.",
-      "source_url": "https://taxsummaries.pwc.com/india/individual/taxes-on-personal-income"
+      "notes": "Default new regime (APTR) for FY 2025/26+. Standard deduction \u20b975,000 assumes salaried/pension income. Section 87A rebate (up to \u20b960,000) zeros PIT when total income \u2264 \u20b912,00,000 (\u2248 \u20b912.75L gross salary with SD). Marginal relief above \u20b912L, surcharge, and old regime not modeled. Source: PwC WTS India (reviewed May 2026) / Budget 2025.",
+      "source_url": "https://taxsummaries.pwc.com/india/individual/taxes-on-personal-income",
+      "model": "progressive",
+      "rebate": {
+        "label": "Section 87A (new regime)",
+        "max_total_income": 1200000,
+        "max_amount": 60000
+      },
+      "cess": {
+        "label": "Health & education cess",
+        "rate": 0.04
+      },
+      "source_name": "PwC Worldwide Tax Summaries"
     },
     {
       "iso3": "USA",
@@ -162,7 +173,7 @@
         "cap": 14555
       },
       "employee_ss": null,
-      "notes": "Barème progressif (single quotient). Typical extra = 10% frais professionnels capped at €14,555. Social contributions (CSG/CRDS etc.) excluded. Household quotient not modeled.",
+      "notes": "Bar\u00e8me progressif (single quotient). Typical extra = 10% frais professionnels capped at \u20ac14,555. Social contributions (CSG/CRDS etc.) excluded. Household quotient not modeled.",
       "source_url": "https://taxsummaries.pwc.com/france/individual/taxes-on-personal-income"
     },
     {
@@ -278,7 +289,7 @@
       "allowance_in_brackets": false,
       "typical_extra_deduction": null,
       "employee_ss": null,
-      "notes": "National income tax brackets. Basic exemption ¥1,040,000 as standard deduction approximation. Local inhabitant tax and 2.1% reconstruction surtax excluded.",
+      "notes": "National income tax brackets. Basic exemption \u00a51,040,000 as standard deduction approximation. Local inhabitant tax and 2.1% reconstruction surtax excluded.",
       "source_url": "https://taxsummaries.pwc.com/japan/individual/taxes-on-personal-income"
     },
     {
@@ -370,7 +381,7 @@
       "allowance_in_brackets": false,
       "typical_extra_deduction": null,
       "employee_ss": null,
-      "notes": "Standard-rate band for single person (€44,000 @ 20%, balance @ 40%). Personal tax credits excluded (would reduce liability). USC and PRSI excluded.",
+      "notes": "Standard-rate band for single person (\u20ac44,000 @ 20%, balance @ 40%). Personal tax credits excluded (would reduce liability). USC and PRSI excluded.",
       "source_url": "https://taxsummaries.pwc.com/ireland/individual/taxes-on-personal-income"
     },
     {
@@ -410,7 +421,7 @@
       "allowance_in_brackets": false,
       "typical_extra_deduction": null,
       "employee_ss": null,
-      "notes": "State general scale for withholdings 2026 (guideline). Autonomous community scales differ. Personal/family minimum ~€5,550 modeled as standard deduction. Social security excluded.",
+      "notes": "State general scale for withholdings 2026 (guideline). Autonomous community scales differ. Personal/family minimum ~\u20ac5,550 modeled as standard deduction. Social security excluded.",
       "source_url": "https://taxsummaries.pwc.com/spain/individual/taxes-on-personal-income"
     },
     {
@@ -465,7 +476,7 @@
         "rate": 0.07,
         "cap": null
       },
-      "notes": "National income tax only (20% above threshold). Municipal tax (~29–35%) is the bulk of Swedish PIT and is EXCLUDED — this model understates tax substantially. Basic allowance approximated. Employee SS at 7% illustrative.",
+      "notes": "National income tax only (20% above threshold). Municipal tax (~29\u201335%) is the bulk of Swedish PIT and is EXCLUDED \u2014 this model understates tax substantially. Basic allowance approximated. Employee SS at 7% illustrative.",
       "source_url": "https://taxsummaries.pwc.com/sweden/individual/taxes-on-personal-income"
     },
     {
@@ -549,7 +560,7 @@
       "allowance_in_brackets": false,
       "typical_extra_deduction": null,
       "employee_ss": null,
-      "notes": "National global income tax. Basic deduction ₩1,500,000. Local income tax (10% of PIT) excluded.",
+      "notes": "National global income tax. Basic deduction \u20a91,500,000. Local income tax (10% of PIT) excluded.",
       "source_url": "https://taxsummaries.pwc.com/republic-of-korea/individual/taxes-on-personal-income"
     },
     {
@@ -760,7 +771,7 @@
         "rate": 0.01,
         "cap": 212544
       },
-      "notes": "Individual rates 1 Mar 2026 – 28 Feb 2027. Primary/secondary/tertiary rebates excluded (understates take-home at lower incomes). Employee SS models UIF-like 1% with annual cap R212,544.",
+      "notes": "Individual rates 1 Mar 2026 \u2013 28 Feb 2027. Primary/secondary/tertiary rebates excluded (understates take-home at lower incomes). Employee SS models UIF-like 1% with annual cap R212,544.",
       "source_url": "https://taxsummaries.pwc.com/south-africa/individual/taxes-on-personal-income"
     },
     {
@@ -843,7 +854,7 @@
         "rate": 0.11,
         "cap": null
       },
-      "notes": "Resident progressive IRS 2026. Solidarity surcharge (2.5–5% above high thresholds) excluded. Employee social security ~11%. Quotient for married couples not modeled.",
+      "notes": "Resident progressive IRS 2026. Solidarity surcharge (2.5\u20135% above high thresholds) excluded. Employee social security ~11%. Quotient for married couples not modeled.",
       "source_url": "https://taxsummaries.pwc.com/portugal/individual/taxes-on-personal-income"
     },
     {
@@ -890,7 +901,7 @@
         "amount": 132
       },
       "employee_ss": null,
-      "notes": "Tariff 2026; 0% band is tax-free allowance (allowance_in_brackets). Typical extra = illustrative fixed €132 deduction. Social security and tax credits (e.g. Verkehrsabsetzbetrag) not fully modeled.",
+      "notes": "Tariff 2026; 0% band is tax-free allowance (allowance_in_brackets). Typical extra = illustrative fixed \u20ac132 deduction. Social security and tax credits (e.g. Verkehrsabsetzbetrag) not fully modeled.",
       "source_url": "https://taxsummaries.pwc.com/austria/individual/taxes-on-personal-income"
     },
     {
@@ -925,7 +936,7 @@
         "rate": 0.1307,
         "cap": null
       },
-      "notes": "Federal brackets income year 2025. Basic tax-free allowance ≈ €10,910 as standard deduction. Regional surcharges/reductions and communal taxes excluded. Employee SS 13.07%.",
+      "notes": "Federal brackets income year 2025. Basic tax-free allowance \u2248 \u20ac10,910 as standard deduction. Regional surcharges/reductions and communal taxes excluded. Employee SS 13.07%.",
       "source_url": "https://taxsummaries.pwc.com/belgium/individual/taxes-on-personal-income"
     },
     {
@@ -1020,8 +1031,8 @@
       "allowance_in_brackets": false,
       "typical_extra_deduction": null,
       "employee_ss": null,
-      "notes": "Monthly progressive table with complex deductions, simplified regimes, and state variation — not shipped as a single annual model.",
-      "reason": "Monthly progressive table with complex deductions, simplified regimes, and state variation — not shipped as a single annual model.",
+      "notes": "Monthly progressive table with complex deductions, simplified regimes, and state variation \u2014 not shipped as a single annual model.",
+      "reason": "Monthly progressive table with complex deductions, simplified regimes, and state variation \u2014 not shipped as a single annual model.",
       "source_url": "https://taxsummaries.pwc.com/brazil/individual/taxes-on-personal-income"
     },
     {
