@@ -1,0 +1,1044 @@
+{
+  "meta": {
+    "updated": "2026-09-28",
+    "disclaimer": "Illustrative national/federal personal income tax models for PPP context only. Local/state/municipal taxes, many social contributions, credits, rebates, and filing status are often excluded. Not tax advice. Not personalized. Figures will differ from real take-home pay.",
+    "primary_source": "PwC Worldwide Tax Summaries"
+  },
+  "countries": [
+    {
+      "iso3": "IND",
+      "name": "India",
+      "currency": "INR",
+      "supported": true,
+      "tax_year": "FY2025/26",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 400000,
+          "rate": 0
+        },
+        {
+          "up_to": 800000,
+          "rate": 0.05
+        },
+        {
+          "up_to": 1200000,
+          "rate": 0.1
+        },
+        {
+          "up_to": 1600000,
+          "rate": 0.15
+        },
+        {
+          "up_to": 2000000,
+          "rate": 0.2
+        },
+        {
+          "up_to": 2400000,
+          "rate": 0.25
+        },
+        {
+          "up_to": null,
+          "rate": 0.3
+        }
+      ],
+      "standard_deduction": 75000,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "New tax regime (default). Standard deduction ₹75,000. Health & education cess and surcharge excluded. Section 87A rebate (can zero tax up to ~₹12L taxable under current rules) not modeled — illustrative only.",
+      "source_url": "https://taxsummaries.pwc.com/india/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "USA",
+      "name": "United States",
+      "currency": "USD",
+      "supported": true,
+      "tax_year": "2025",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 11925,
+          "rate": 0.1
+        },
+        {
+          "up_to": 48475,
+          "rate": 0.12
+        },
+        {
+          "up_to": 103350,
+          "rate": 0.22
+        },
+        {
+          "up_to": 197300,
+          "rate": 0.24
+        },
+        {
+          "up_to": 250525,
+          "rate": 0.32
+        },
+        {
+          "up_to": 626350,
+          "rate": 0.35
+        },
+        {
+          "up_to": null,
+          "rate": 0.37
+        }
+      ],
+      "standard_deduction": 15750,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Federal income tax only, single filer. State/local income tax and FICA/payroll taxes excluded.",
+      "source_url": "https://taxsummaries.pwc.com/united-states/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "GBR",
+      "name": "United Kingdom",
+      "currency": "GBP",
+      "supported": true,
+      "tax_year": "2026/27",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 12570,
+          "rate": 0
+        },
+        {
+          "up_to": 50270,
+          "rate": 0.2
+        },
+        {
+          "up_to": 125140,
+          "rate": 0.4
+        },
+        {
+          "up_to": null,
+          "rate": 0.45
+        }
+      ],
+      "standard_deduction": 12570,
+      "allowance_in_brackets": true,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "England/Wales/NI basic model. Personal allowance is the 0% band (allowance_in_brackets). Scotland uses different bands. National Insurance excluded. Personal allowance taper for high incomes not modeled.",
+      "source_url": "https://taxsummaries.pwc.com/united-kingdom/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "FRA",
+      "name": "France",
+      "currency": "EUR",
+      "supported": true,
+      "tax_year": "2025",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 11600,
+          "rate": 0
+        },
+        {
+          "up_to": 29579,
+          "rate": 0.11
+        },
+        {
+          "up_to": 84577,
+          "rate": 0.3
+        },
+        {
+          "up_to": 181917,
+          "rate": 0.41
+        },
+        {
+          "up_to": null,
+          "rate": 0.45
+        }
+      ],
+      "standard_deduction": 0,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": {
+        "kind": "pct_gross",
+        "pct": 0.1,
+        "cap": 14555
+      },
+      "employee_ss": null,
+      "notes": "Barème progressif (single quotient). Typical extra = 10% frais professionnels capped at €14,555. Social contributions (CSG/CRDS etc.) excluded. Household quotient not modeled.",
+      "source_url": "https://taxsummaries.pwc.com/france/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "CAN",
+      "name": "Canada",
+      "currency": "CAD",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 58523,
+          "rate": 0.14
+        },
+        {
+          "up_to": 117045,
+          "rate": 0.205
+        },
+        {
+          "up_to": 181440,
+          "rate": 0.26
+        },
+        {
+          "up_to": 258482,
+          "rate": 0.29
+        },
+        {
+          "up_to": null,
+          "rate": 0.33
+        }
+      ],
+      "standard_deduction": 16452,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Federal tax only. Basic personal amount CA$16,452 modeled as a standard deduction approximation (it is actually a non-refundable credit). Provincial/territorial tax and CPP/EI excluded.",
+      "source_url": "https://taxsummaries.pwc.com/canada/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "AUS",
+      "name": "Australia",
+      "currency": "AUD",
+      "supported": true,
+      "tax_year": "2025/26",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 18200,
+          "rate": 0
+        },
+        {
+          "up_to": 45000,
+          "rate": 0.16
+        },
+        {
+          "up_to": 135000,
+          "rate": 0.3
+        },
+        {
+          "up_to": 190000,
+          "rate": 0.37
+        },
+        {
+          "up_to": null,
+          "rate": 0.45
+        }
+      ],
+      "standard_deduction": 18200,
+      "allowance_in_brackets": true,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Resident individual rates. Tax-free threshold is the 0% band (allowance_in_brackets). Medicare levy and offsets excluded.",
+      "source_url": "https://taxsummaries.pwc.com/australia/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "JPN",
+      "name": "Japan",
+      "currency": "JPY",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 1950000,
+          "rate": 0.05
+        },
+        {
+          "up_to": 3300000,
+          "rate": 0.1
+        },
+        {
+          "up_to": 6950000,
+          "rate": 0.2
+        },
+        {
+          "up_to": 9000000,
+          "rate": 0.23
+        },
+        {
+          "up_to": 18000000,
+          "rate": 0.33
+        },
+        {
+          "up_to": 40000000,
+          "rate": 0.4
+        },
+        {
+          "up_to": null,
+          "rate": 0.45
+        }
+      ],
+      "standard_deduction": 1040000,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "National income tax brackets. Basic exemption ¥1,040,000 as standard deduction approximation. Local inhabitant tax and 2.1% reconstruction surtax excluded.",
+      "source_url": "https://taxsummaries.pwc.com/japan/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "SGP",
+      "name": "Singapore",
+      "currency": "SGD",
+      "supported": true,
+      "tax_year": "YA2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 20000,
+          "rate": 0
+        },
+        {
+          "up_to": 30000,
+          "rate": 0.02
+        },
+        {
+          "up_to": 40000,
+          "rate": 0.035
+        },
+        {
+          "up_to": 80000,
+          "rate": 0.07
+        },
+        {
+          "up_to": 120000,
+          "rate": 0.115
+        },
+        {
+          "up_to": 160000,
+          "rate": 0.15
+        },
+        {
+          "up_to": 200000,
+          "rate": 0.18
+        },
+        {
+          "up_to": 240000,
+          "rate": 0.19
+        },
+        {
+          "up_to": 280000,
+          "rate": 0.195
+        },
+        {
+          "up_to": 320000,
+          "rate": 0.2
+        },
+        {
+          "up_to": 500000,
+          "rate": 0.22
+        },
+        {
+          "up_to": 1000000,
+          "rate": 0.23
+        },
+        {
+          "up_to": null,
+          "rate": 0.24
+        }
+      ],
+      "standard_deduction": 1000,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Resident progressive rates YA2026 (income year 2025). Standard deduction approximates a small personal relief; full relief schedule not modeled. CPF excluded.",
+      "source_url": "https://taxsummaries.pwc.com/singapore/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "IRL",
+      "name": "Ireland",
+      "currency": "EUR",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 44000,
+          "rate": 0.2
+        },
+        {
+          "up_to": null,
+          "rate": 0.4
+        }
+      ],
+      "standard_deduction": 0,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Standard-rate band for single person (€44,000 @ 20%, balance @ 40%). Personal tax credits excluded (would reduce liability). USC and PRSI excluded.",
+      "source_url": "https://taxsummaries.pwc.com/ireland/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "ESP",
+      "name": "Spain",
+      "currency": "EUR",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 12450,
+          "rate": 0.19
+        },
+        {
+          "up_to": 20200,
+          "rate": 0.24
+        },
+        {
+          "up_to": 35200,
+          "rate": 0.3
+        },
+        {
+          "up_to": 60000,
+          "rate": 0.37
+        },
+        {
+          "up_to": 300000,
+          "rate": 0.45
+        },
+        {
+          "up_to": null,
+          "rate": 0.47
+        }
+      ],
+      "standard_deduction": 5550,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "State general scale for withholdings 2026 (guideline). Autonomous community scales differ. Personal/family minimum ~€5,550 modeled as standard deduction. Social security excluded.",
+      "source_url": "https://taxsummaries.pwc.com/spain/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "ITA",
+      "name": "Italy",
+      "currency": "EUR",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 28000,
+          "rate": 0.23
+        },
+        {
+          "up_to": 50000,
+          "rate": 0.33
+        },
+        {
+          "up_to": null,
+          "rate": 0.43
+        }
+      ],
+      "standard_deduction": 0,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "IRPEF national brackets. Regional/municipal add-ons and employee deductions/credits excluded.",
+      "source_url": "https://taxsummaries.pwc.com/italy/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "SWE",
+      "name": "Sweden",
+      "currency": "SEK",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 643000,
+          "rate": 0
+        },
+        {
+          "up_to": null,
+          "rate": 0.2
+        }
+      ],
+      "standard_deduction": 17400,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": {
+        "rate": 0.07,
+        "cap": null
+      },
+      "notes": "National income tax only (20% above threshold). Municipal tax (~29–35%) is the bulk of Swedish PIT and is EXCLUDED — this model understates tax substantially. Basic allowance approximated. Employee SS at 7% illustrative.",
+      "source_url": "https://taxsummaries.pwc.com/sweden/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "NZL",
+      "name": "New Zealand",
+      "currency": "NZD",
+      "supported": true,
+      "tax_year": "2025",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 15600,
+          "rate": 0.105
+        },
+        {
+          "up_to": 53500,
+          "rate": 0.175
+        },
+        {
+          "up_to": 78100,
+          "rate": 0.3
+        },
+        {
+          "up_to": 180000,
+          "rate": 0.33
+        },
+        {
+          "up_to": null,
+          "rate": 0.39
+        }
+      ],
+      "standard_deduction": 0,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Individual rates since 31 Jul 2024. ACC earner levy excluded.",
+      "source_url": "https://taxsummaries.pwc.com/new-zealand/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "KOR",
+      "name": "Korea, Republic of",
+      "currency": "KRW",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 14000000,
+          "rate": 0.06
+        },
+        {
+          "up_to": 50000000,
+          "rate": 0.15
+        },
+        {
+          "up_to": 88000000,
+          "rate": 0.24
+        },
+        {
+          "up_to": 150000000,
+          "rate": 0.35
+        },
+        {
+          "up_to": 300000000,
+          "rate": 0.38
+        },
+        {
+          "up_to": 500000000,
+          "rate": 0.4
+        },
+        {
+          "up_to": 1000000000,
+          "rate": 0.42
+        },
+        {
+          "up_to": null,
+          "rate": 0.45
+        }
+      ],
+      "standard_deduction": 1500000,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "National global income tax. Basic deduction ₩1,500,000. Local income tax (10% of PIT) excluded.",
+      "source_url": "https://taxsummaries.pwc.com/republic-of-korea/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "MEX",
+      "name": "Mexico",
+      "currency": "MXN",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 10135.11,
+          "rate": 0.0192
+        },
+        {
+          "up_to": 86022.11,
+          "rate": 0.064
+        },
+        {
+          "up_to": 151176.19,
+          "rate": 0.1088
+        },
+        {
+          "up_to": 175735.66,
+          "rate": 0.16
+        },
+        {
+          "up_to": 210403.69,
+          "rate": 0.1792
+        },
+        {
+          "up_to": 424353.97,
+          "rate": 0.2136
+        },
+        {
+          "up_to": 668840.14,
+          "rate": 0.2352
+        },
+        {
+          "up_to": 1276925.98,
+          "rate": 0.3
+        },
+        {
+          "up_to": 1702567.97,
+          "rate": 0.32
+        },
+        {
+          "up_to": 5107703.92,
+          "rate": 0.34
+        },
+        {
+          "up_to": null,
+          "rate": 0.35
+        }
+      ],
+      "standard_deduction": 0,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Resident annual ISR table 2026. Employment subsidies and social security excluded.",
+      "source_url": "https://taxsummaries.pwc.com/mexico/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "CHN",
+      "name": "China",
+      "currency": "CNY",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 36000,
+          "rate": 0.03
+        },
+        {
+          "up_to": 144000,
+          "rate": 0.1
+        },
+        {
+          "up_to": 300000,
+          "rate": 0.2
+        },
+        {
+          "up_to": 420000,
+          "rate": 0.25
+        },
+        {
+          "up_to": 660000,
+          "rate": 0.3
+        },
+        {
+          "up_to": 960000,
+          "rate": 0.35
+        },
+        {
+          "up_to": null,
+          "rate": 0.45
+        }
+      ],
+      "standard_deduction": 60000,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Comprehensive income annual brackets for residents. Standard basic deduction CNY 60,000. Specific additional deductions and social insurance excluded.",
+      "source_url": "https://taxsummaries.pwc.com/peoples-republic-of-china/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "ARE",
+      "name": "United Arab Emirates",
+      "currency": "AED",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "none",
+      "brackets": [
+        {
+          "up_to": null,
+          "rate": 0
+        }
+      ],
+      "standard_deduction": 0,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "No personal income tax on employment income for individuals under the federal regime modeled here (rate 0).",
+      "source_url": "https://taxsummaries.pwc.com/united-arab-emirates/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "BGD",
+      "name": "Bangladesh",
+      "currency": "BDT",
+      "supported": true,
+      "tax_year": "FY2025/26",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 400000,
+          "rate": 0
+        },
+        {
+          "up_to": 700000,
+          "rate": 0.1
+        },
+        {
+          "up_to": 1100000,
+          "rate": 0.15
+        },
+        {
+          "up_to": 1600000,
+          "rate": 0.2
+        },
+        {
+          "up_to": 3600000,
+          "rate": 0.25
+        },
+        {
+          "up_to": null,
+          "rate": 0.3
+        }
+      ],
+      "standard_deduction": 400000,
+      "allowance_in_brackets": true,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "General taxpayer exemption BDT 400,000 is the 0% band (allowance_in_brackets). Surcharge on net worth and minimum tax not modeled. Higher exemption for women/seniors not applied.",
+      "source_url": "https://taxsummaries.pwc.com/bangladesh/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "ZAF",
+      "name": "South Africa",
+      "currency": "ZAR",
+      "supported": true,
+      "tax_year": "2026/27",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 245100,
+          "rate": 0.18
+        },
+        {
+          "up_to": 383100,
+          "rate": 0.26
+        },
+        {
+          "up_to": 530200,
+          "rate": 0.31
+        },
+        {
+          "up_to": 695800,
+          "rate": 0.36
+        },
+        {
+          "up_to": 887000,
+          "rate": 0.39
+        },
+        {
+          "up_to": 1878600,
+          "rate": 0.41
+        },
+        {
+          "up_to": null,
+          "rate": 0.45
+        }
+      ],
+      "standard_deduction": 0,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": {
+        "rate": 0.01,
+        "cap": 212544
+      },
+      "notes": "Individual rates 1 Mar 2026 – 28 Feb 2027. Primary/secondary/tertiary rebates excluded (understates take-home at lower incomes). Employee SS models UIF-like 1% with annual cap R212,544.",
+      "source_url": "https://taxsummaries.pwc.com/south-africa/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "POL",
+      "name": "Poland",
+      "currency": "PLN",
+      "supported": true,
+      "tax_year": "2025",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 30000,
+          "rate": 0
+        },
+        {
+          "up_to": 120000,
+          "rate": 0.12
+        },
+        {
+          "up_to": null,
+          "rate": 0.32
+        }
+      ],
+      "standard_deduction": 30000,
+      "allowance_in_brackets": true,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Tax-free amount PLN 30,000 is the 0% band (allowance_in_brackets). Health insurance / ZUS employee contributions excluded.",
+      "source_url": "https://taxsummaries.pwc.com/poland/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "PRT",
+      "name": "Portugal",
+      "currency": "EUR",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 8342,
+          "rate": 0.125
+        },
+        {
+          "up_to": 12587,
+          "rate": 0.157
+        },
+        {
+          "up_to": 17838,
+          "rate": 0.212
+        },
+        {
+          "up_to": 23089,
+          "rate": 0.241
+        },
+        {
+          "up_to": 29397,
+          "rate": 0.311
+        },
+        {
+          "up_to": 43090,
+          "rate": 0.349
+        },
+        {
+          "up_to": 46566,
+          "rate": 0.431
+        },
+        {
+          "up_to": 86634,
+          "rate": 0.446
+        },
+        {
+          "up_to": null,
+          "rate": 0.48
+        }
+      ],
+      "standard_deduction": 0,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": {
+        "rate": 0.11,
+        "cap": null
+      },
+      "notes": "Resident progressive IRS 2026. Solidarity surcharge (2.5–5% above high thresholds) excluded. Employee social security ~11%. Quotient for married couples not modeled.",
+      "source_url": "https://taxsummaries.pwc.com/portugal/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "AUT",
+      "name": "Austria",
+      "currency": "EUR",
+      "supported": true,
+      "tax_year": "2026",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 13539,
+          "rate": 0
+        },
+        {
+          "up_to": 21992,
+          "rate": 0.2
+        },
+        {
+          "up_to": 36458,
+          "rate": 0.3
+        },
+        {
+          "up_to": 70365,
+          "rate": 0.4
+        },
+        {
+          "up_to": 104859,
+          "rate": 0.48
+        },
+        {
+          "up_to": 1000000,
+          "rate": 0.5
+        },
+        {
+          "up_to": null,
+          "rate": 0.55
+        }
+      ],
+      "standard_deduction": 13539,
+      "allowance_in_brackets": true,
+      "typical_extra_deduction": {
+        "kind": "fixed",
+        "amount": 132
+      },
+      "employee_ss": null,
+      "notes": "Tariff 2026; 0% band is tax-free allowance (allowance_in_brackets). Typical extra = illustrative fixed €132 deduction. Social security and tax credits (e.g. Verkehrsabsetzbetrag) not fully modeled.",
+      "source_url": "https://taxsummaries.pwc.com/austria/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "BEL",
+      "name": "Belgium",
+      "currency": "EUR",
+      "supported": true,
+      "tax_year": "2025",
+      "system": "progressive",
+      "brackets": [
+        {
+          "up_to": 16320,
+          "rate": 0.25
+        },
+        {
+          "up_to": 28800,
+          "rate": 0.4
+        },
+        {
+          "up_to": 49840,
+          "rate": 0.45
+        },
+        {
+          "up_to": null,
+          "rate": 0.5
+        }
+      ],
+      "standard_deduction": 10910,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": {
+        "rate": 0.1307,
+        "cap": null
+      },
+      "notes": "Federal brackets income year 2025. Basic tax-free allowance ≈ €10,910 as standard deduction. Regional surcharges/reductions and communal taxes excluded. Employee SS 13.07%.",
+      "source_url": "https://taxsummaries.pwc.com/belgium/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "DEU",
+      "name": "Germany",
+      "currency": "EUR",
+      "supported": false,
+      "tax_year": null,
+      "system": null,
+      "brackets": null,
+      "standard_deduction": null,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Progressive federal tariff plus Solidarity surcharge and optional church tax; reliable net needs more inputs than a single national PIT table.",
+      "reason": "Progressive federal tariff plus Solidarity surcharge and optional church tax; reliable net needs more inputs than a single national PIT table.",
+      "source_url": "https://taxsummaries.pwc.com/germany/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "NLD",
+      "name": "Netherlands",
+      "currency": "EUR",
+      "supported": false,
+      "tax_year": null,
+      "system": null,
+      "brackets": null,
+      "standard_deduction": null,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Box 1/2/3 system with work credits and complex allowances; not reducible to a simple progressive wage table.",
+      "reason": "Box 1/2/3 system with work credits and complex allowances; not reducible to a simple progressive wage table.",
+      "source_url": "https://taxsummaries.pwc.com/netherlands/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "NOR",
+      "name": "Norway",
+      "currency": "NOK",
+      "supported": false,
+      "tax_year": null,
+      "system": null,
+      "brackets": null,
+      "standard_deduction": null,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "National bracket tax plus substantial municipality-dependent municipal tax; single national model would mislead.",
+      "reason": "National bracket tax plus substantial municipality-dependent municipal tax; single national model would mislead.",
+      "source_url": "https://taxsummaries.pwc.com/norway/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "DNK",
+      "name": "Denmark",
+      "currency": "DKK",
+      "supported": false,
+      "tax_year": null,
+      "system": null,
+      "brackets": null,
+      "standard_deduction": null,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Bottom tax + top tax plus large municipal tax component that varies by kommune.",
+      "reason": "Bottom tax + top tax plus large municipal tax component that varies by kommune.",
+      "source_url": "https://taxsummaries.pwc.com/denmark/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "CHE",
+      "name": "Switzerland",
+      "currency": "CHF",
+      "supported": false,
+      "tax_year": null,
+      "system": null,
+      "brackets": null,
+      "standard_deduction": null,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Federal + canton + commune rates; liability depends heavily on canton of residence.",
+      "reason": "Federal + canton + commune rates; liability depends heavily on canton of residence.",
+      "source_url": "https://taxsummaries.pwc.com/switzerland/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "BRA",
+      "name": "Brazil",
+      "currency": "BRL",
+      "supported": false,
+      "tax_year": null,
+      "system": null,
+      "brackets": null,
+      "standard_deduction": null,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "Monthly progressive table with complex deductions, simplified regimes, and state variation — not shipped as a single annual model.",
+      "reason": "Monthly progressive table with complex deductions, simplified regimes, and state variation — not shipped as a single annual model.",
+      "source_url": "https://taxsummaries.pwc.com/brazil/individual/taxes-on-personal-income"
+    },
+    {
+      "iso3": "FIN",
+      "name": "Finland",
+      "currency": "EUR",
+      "supported": false,
+      "tax_year": null,
+      "system": null,
+      "brackets": null,
+      "standard_deduction": null,
+      "allowance_in_brackets": false,
+      "typical_extra_deduction": null,
+      "employee_ss": null,
+      "notes": "State progressive tax plus municipality-specific municipal tax and possible church tax.",
+      "reason": "State progressive tax plus municipality-specific municipal tax and possible church tax.",
+      "source_url": "https://taxsummaries.pwc.com/finland/individual/taxes-on-personal-income"
+    }
+  ]
+}

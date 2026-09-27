@@ -368,6 +368,101 @@ select:hover { border-color: var(--border-strong); }
   font-size: var(--text-xs);
 }
 
+/* —— Illustrative tax panel —— */
+.tax-panel {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.tax-heading {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-serif);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+.tax-grid {
+  display: grid;
+  gap: var(--space-4);
+}
+@media (min-width: 640px) {
+  .tax-grid { grid-template-columns: 1fr 1fr; }
+}
+.tax-col-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.tax-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  margin: var(--space-1) 0;
+  color: var(--text-secondary);
+}
+.tax-row b {
+  color: var(--text);
+  font-weight: 600;
+  text-align: right;
+}
+.tax-note {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: var(--leading-snug);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tax-unavailable {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--warning, #b45309);
+}
+.tax-warnings {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3);
+  list-style: disc;
+  padding-left: 1.25rem;
+  background: var(--surface-soft);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.tax-warnings li { margin: var(--space-1) 0; }
+.tax-disclaimer {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: var(--leading-snug);
+}
+.hint-inline {
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: var(--text-xs);
+}
+#deductionPct {
+  width: 100%;
+  max-width: 8rem;
+}
+
+[data-theme="dark"] .tax-panel {
+  background: var(--surface-answer-soft, var(--surface));
+}
+[data-theme="dark"] .tax-unavailable {
+  color: #fbbf24;
+}
+
 /* —— Commodities: strip on small, table on wide —— */
 .commodities h2 {
   margin: 0 0 var(--space-1);

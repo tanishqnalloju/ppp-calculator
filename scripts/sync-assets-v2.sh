@@ -12,6 +12,8 @@ mkdir -p "$OUT/data"
 {
   cat "$ROOT/v2/js/compute.js"
   echo
+  cat "$ROOT/v2/js/tax.js"
+  echo
   cat "$ROOT/v2/js/theme.js"
   echo
   cat "$ROOT/v2/js/url.js"
@@ -33,6 +35,7 @@ cp "$ROOT/v2/tokens.css" "$OUT/tokens.css"
 cp "$ROOT/v2/favicon.svg" "$OUT/favicon.svg"
 cp "$ROOT/data/countries.json" "$OUT/data/countries.json"
 cp "$ROOT/data/commodities.json" "$OUT/data/commodities.json"
+cp "$ROOT/data/taxes.json" "$OUT/data/taxes.json"
 
 python3 - "$ROOT" "$OUT" <<'PY'
 import re, sys

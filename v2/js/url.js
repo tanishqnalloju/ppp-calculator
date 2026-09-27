@@ -24,16 +24,29 @@
     return matches[0];
   }
 
+  const DEDUCTION_MODES = ["none", "standard", "typical", "custom"];
+
   function readParams(byIso, setters) {
     const q = new URLSearchParams(location.search);
     const incomeRaw = q.get("income");
     const type = q.get("type");
     const homeIso = resolveCountryCode(q.get("home"), byIso);
     const destIso = resolveCountryCode(q.get("dest"), byIso);
+    const deduction = q.get("deduction");
+    const deductionPct = q.get("deduction_pct");
 
     if (type === "gross" || type === "net") setters.setType(type);
     if (homeIso) setters.setHome(homeIso, true);
     if (destIso) setters.setDest(destIso, true);
+    if (deduction && DEDUCTION_MODES.includes(deduction) && setters.setDeduction) {
+      setters.setDeduction(deduction);
+    }
+    if (deductionPct != null && deductionPct !== "" && setters.setDeductionPct) {
+      const pct = global.PPP.tax
+        ? global.PPP.tax.clampCustomPct(deductionPct)
+        : Math.max(0, Math.min(50, Number(deductionPct) || 0));
+      setters.setDeductionPct(String(pct));
+    }
 
     if (incomeRaw) {
       const n = global.PPP.parseIncome(incomeRaw);
@@ -54,6 +67,14 @@
     q.set("home", state.home || DEFAULT_HOME);
     q.set("type", state.type || "net");
     q.set("dest", state.dest || DEFAULT_DEST);
+    const ded = state.deduction || "standard";
+    if (ded !== "standard") q.set("deduction", ded);
+    if (ded === "custom") {
+      const pct = global.PPP.tax
+        ? global.PPP.tax.clampCustomPct(state.deduction_pct)
+        : Math.max(0, Math.min(50, Number(state.deduction_pct) || 0));
+      q.set("deduction_pct", String(pct));
+    }
     return q;
   }
 

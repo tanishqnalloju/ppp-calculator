@@ -123,6 +123,124 @@
     s.setAttribute("data-kind", kind || "warn");
   }
 
+  function taxOpts(state) {
+    return {
+      deductionMode: state.deduction || "standard",
+      customPct: state.deduction_pct,
+    };
+  }
+
+  function fmtPct(rate) {
+    if (rate == null || !Number.isFinite(rate)) return "—";
+    return `${(rate * 100).toFixed(1)}%`;
+  }
+
+  function renderTaxPanel(ctx) {
+    const panel = el("taxPanel");
+    if (!panel) return;
+
+    const { home, dest, itype, incomeLocal, netForPpp, homeTax, destGross, homeSupported, destSupported, homeTaxCountry, destTaxCountry, taxUnavailable } = ctx;
+    const escapeHtml = global.PPP.escapeHtml;
+
+    if (!(incomeLocal > 0)) {
+      panel.classList.add("hidden");
+      panel.innerHTML = "";
+      return;
+    }
+
+    panel.classList.remove("hidden");
+    const warnings = [];
+    if (itype === "gross" && !homeSupported) {
+      warnings.push(
+        `Home (${escapeHtml(home.iso3)}): tax estimate unavailable — PPP uses the entered figure as take-home for comparison.`
+      );
+    } else if (!homeSupported && homeTaxCountry && homeTaxCountry.reason) {
+      warnings.push(`Home (${escapeHtml(home.iso3)}): ${escapeHtml(homeTaxCountry.reason)}`);
+    }
+    if (!destSupported && destTaxCountry) {
+      const reason = destTaxCountry.reason || destTaxCountry.notes || "No illustrative PIT model.";
+      warnings.push(`Destination (${escapeHtml(dest.iso3)}): gross-up unavailable — ${escapeHtml(reason)}`);
+    }
+
+    let homeBlock = "";
+    if (itype === "gross" && homeSupported && homeTax && homeTax.supported) {
+      homeBlock =
+        `<div class="tax-col">` +
+        `<p class="tax-col-title">Home · ${escapeHtml(home.name)}</p>` +
+        `<div class="tax-row"><span>Est. PIT + SS</span><b>${escapeHtml(global.PPP.fmtMoney(homeTax.totalTax, home.currency, home.iso3))}</b></div>` +
+        `<div class="tax-row"><span>Effective rate</span><b>${escapeHtml(fmtPct(homeTax.effectiveRate))}</b></div>` +
+        `<div class="tax-row"><span>Est. net (used for PPP)</span><b>${escapeHtml(global.PPP.fmtMoney(homeTax.net, home.currency, home.iso3))}</b></div>` +
+        (homeTax.notes ? `<p class="tax-note" title="${escapeHtml(homeTax.notes)}">${escapeHtml(homeTax.notes)}</p>` : "") +
+        `</div>`;
+    } else if (itype === "gross" && !homeSupported) {
+      homeBlock =
+        `<div class="tax-col">` +
+        `<p class="tax-col-title">Home · ${escapeHtml(home.name)}</p>` +
+        `<p class="tax-unavailable">Tax estimate unavailable</p>` +
+        `<div class="tax-row"><span>Amount used for PPP</span><b>${escapeHtml(global.PPP.fmtMoney(netForPpp, home.currency, home.iso3))}</b></div>` +
+        `<p class="tax-note">Entered gross treated as take-home for PPP only (no brackets applied).</p>` +
+        `</div>`;
+    } else {
+      // net mode — PPP uses entered amount; still show brief home note if useful
+      homeBlock =
+        `<div class="tax-col">` +
+        `<p class="tax-col-title">Home · ${escapeHtml(home.name)}</p>` +
+        `<div class="tax-row"><span>Take-home used for PPP</span><b>${escapeHtml(global.PPP.fmtMoney(netForPpp, home.currency, home.iso3))}</b></div>` +
+        `<p class="tax-note">Net mode: entered amount is take-home; no home gross→net conversion.</p>` +
+        `</div>`;
+    }
+
+    let destBlock = "";
+    if (destSupported && destGross && destGross.supported && destGross.gross != null) {
+      destBlock =
+        `<div class="tax-col">` +
+        `<p class="tax-col-title">Destination · ${escapeHtml(dest.name)}</p>` +
+        `<div class="tax-row"><span>PPP-equivalent net</span><b>${escapeHtml(global.PPP.fmtMoney(ctx.pppEquiv, dest.currency, dest.iso3))}</b></div>` +
+        `<div class="tax-row"><span>Est. gross needed</span><b>${escapeHtml(global.PPP.fmtMoney(destGross.gross, dest.currency, dest.iso3))}</b></div>` +
+        `<div class="tax-row"><span>Est. effective rate</span><b>${escapeHtml(fmtPct(destGross.effectiveRate))}</b></div>` +
+        (destGross.notes ? `<p class="tax-note" title="${escapeHtml(destGross.notes)}">${escapeHtml(destGross.notes)}</p>` : "") +
+        `</div>`;
+    } else {
+      destBlock =
+        `<div class="tax-col">` +
+        `<p class="tax-col-title">Destination · ${escapeHtml(dest.name)}</p>` +
+        `<p class="tax-unavailable">Gross-up unavailable</p>` +
+        `<p class="tax-note">No illustrative PIT model for this destination (or tax data not loaded).</p>` +
+        `</div>`;
+    }
+
+    const warnHtml = warnings.length
+      ? `<ul class="tax-warnings">${warnings.map((w) => `<li>${w}</li>`).join("")}</ul>`
+      : "";
+
+    panel.innerHTML =
+      `<h2 class="tax-heading">Illustrative tax estimates</h2>` +
+      `<div class="tax-grid">${homeBlock}${destBlock}</div>` +
+      warnHtml +
+      `<p class="tax-disclaimer">Illustrative national/federal PIT model only. Local/state taxes and many social contributions are often excluded. <strong>Not tax advice</strong> — not personalized. Sources: PwC Worldwide Tax Summaries (see About / <code>data/taxes.json</code>).</p>`;
+  }
+
+  function syncDeductionUi(state, homeIso, destIso) {
+    const modeEl = el("deductionMode");
+    const customWrap = el("customPctWrap");
+    const typicalOpt = el("deductionTypicalOpt");
+    if (!modeEl) return;
+
+    const hasTypical =
+      (global.PPP.tax && (global.PPP.tax.hasTypicalExtra(homeIso) || global.PPP.tax.hasTypicalExtra(destIso)));
+    if (typicalOpt) {
+      typicalOpt.disabled = !hasTypical;
+      typicalOpt.hidden = !hasTypical;
+      if (!hasTypical && modeEl.value === "typical") {
+        modeEl.value = "standard";
+      }
+    }
+    if (customWrap) {
+      if (modeEl.value === "custom") customWrap.classList.remove("hidden");
+      else customWrap.classList.add("hidden");
+    }
+  }
+
   function render(ctx) {
     const { byIso, COMM, getState, writeUrlDebounced } = ctx;
     const state = getState();
@@ -138,8 +256,12 @@
     const king = el("kingLink");
     if (king) king.href = global.PPP.url.kingIndexHref(state);
 
+    syncDeductionUi(state, state.home, state.dest);
+
     if (!home || !dest) {
       showStatus("Pick a home and destination country.", "warn");
+      const panel = el("taxPanel");
+      if (panel) { panel.classList.add("hidden"); panel.innerHTML = ""; }
       return;
     }
 
@@ -158,6 +280,7 @@
       const delta = el("deltaNote");
       if (delta) { delta.textContent = ""; delta.classList.add("hidden"); }
       if (!ev.reliable) showStatus(ev.reason || "Data unreliable for this pair.", "warn");
+      renderTaxPanel({ home, dest, itype: state.type || "net", incomeLocal: 0 });
       writeUrlDebounced();
       return;
     }
@@ -165,8 +288,34 @@
     if (incomeLocal < global.PPP.INCOME_MIN) incomeLocal = global.PPP.INCOME_MIN;
     if (incomeLocal > global.PPP.INCOME_MAX) incomeLocal = global.PPP.INCOME_MAX;
 
-    const r = global.PPP.compute(home, dest, incomeLocal);
     const itype = state.type || "net";
+    const opts = taxOpts(state);
+    const taxApi = global.PPP.tax;
+    const homeTaxCountry = taxApi ? taxApi.getTax(home.iso3) : null;
+    const destTaxCountry = taxApi ? taxApi.getTax(dest.iso3) : null;
+    const homeSupported = taxApi ? taxApi.isSupported(home.iso3) : false;
+    const destSupported = taxApi ? taxApi.isSupported(dest.iso3) : false;
+
+    let netForPpp = incomeLocal;
+    let homeTax = null;
+    let taxUnavailable = false;
+
+    if (itype === "gross") {
+      if (homeSupported && taxApi) {
+        homeTax = taxApi.grossToNet(incomeLocal, homeTaxCountry, opts);
+        netForPpp = homeTax.net;
+      } else {
+        taxUnavailable = true;
+        netForPpp = incomeLocal; // treat entered as net for PPP; warn in panel
+      }
+    }
+
+    const r = global.PPP.compute(home, dest, netForPpp);
+
+    let destGross = null;
+    if (r.reliable && r.equiv != null && destSupported && taxApi) {
+      destGross = taxApi.netToGross(r.equiv, destTaxCountry, opts);
+    }
 
     if (!r.reliable) {
       showStatus(r.reason || "Data unreliable for this pair — results hidden.", "warn");
@@ -176,20 +325,33 @@
         `${global.PPP.fmtIncomeLead(incomeLocal, home.currency, home.iso3)} ${itype} · ${home.name} → ${dest.name}`;
       const delta = el("deltaNote");
       if (delta) { delta.textContent = ""; delta.classList.add("hidden"); }
+      renderTaxPanel({
+        home, dest, itype, incomeLocal, netForPpp, homeTax, destGross: null,
+        homeSupported, destSupported, homeTaxCountry, destTaxCountry, taxUnavailable,
+        pppEquiv: null,
+      });
       writeUrlDebounced();
       return;
     }
 
     showStatus(null);
+
+    let leadExtra = "";
+    if (itype === "gross" && homeSupported && homeTax) {
+      leadExtra = ` (est. net ${global.PPP.fmtIncomeLead(homeTax.net, home.currency, home.iso3)})`;
+    } else if (itype === "gross" && !homeSupported) {
+      leadExtra = " (tax estimate unavailable)";
+    }
+
     el("leadText").textContent =
-      `${global.PPP.fmtIncomeLead(incomeLocal, home.currency, home.iso3)} ${itype} in ${home.name} → ${dest.name}`;
+      `${global.PPP.fmtIncomeLead(incomeLocal, home.currency, home.iso3)} ${itype}${leadExtra} in ${home.name} → ${dest.name}`;
 
     el("pppValue").textContent = global.PPP.fmtMoney(r.equiv, dest.currency, dest.iso3);
-    el("pppSub").textContent = `To buy a similar basket in ${dest.name}`;
+    el("pppSub").textContent = `To buy a similar basket in ${dest.name}` +
+      (itype === "gross" && homeSupported ? " (from estimated home net)" : "");
     el("fxValue").textContent = global.PPP.fmtMoney(r.fxLocal, dest.currency, dest.iso3);
     el("fxSub").textContent = `If you convert at market FX (${home.currency}→${dest.currency})`;
 
-    // Evidence from full compute (same as evidence()) for consistency when income present
     setEvidence({
       reliable: true,
       pliDisplay: r.pliDisplay,
@@ -208,6 +370,12 @@
         delta.classList.add("hidden");
       }
     }
+
+    renderTaxPanel({
+      home, dest, itype, incomeLocal, netForPpp, homeTax, destGross,
+      homeSupported, destSupported, homeTaxCountry, destTaxCountry, taxUnavailable,
+      pppEquiv: r.equiv,
+    });
 
     writeUrlDebounced();
   }

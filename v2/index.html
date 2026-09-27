@@ -82,7 +82,7 @@
       "name": "Is net vs gross income adjusted for tax?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Net/gross is a label only. Enter the annual figure you want to compare; the calculator does not model tax systems."
+        "text": "Illustrative only. In Gross mode, when a national/federal PIT model exists for the home country, income is converted to an estimated net before PPP. Destination gross-up estimates the gross needed abroad to land the PPP-equivalent net. Models exclude many local taxes and contributions. Not tax advice."
       }
     }
   ]
@@ -113,11 +113,27 @@
         </label>
 
         <label class="field" for="itype">
-          Type <span class="hint-inline">(label only — tax not modeled)</span>
+          Type
           <select id="itype">
-            <option value="net">Net</option>
-            <option value="gross">Gross</option>
+            <option value="net">Net (take-home)</option>
+            <option value="gross">Gross (before tax)</option>
           </select>
+        </label>
+
+        <label class="field" for="deductionMode">
+          Deduction assumption <span class="hint-inline">(both countries)</span>
+          <select id="deductionMode">
+            <option value="none">None</option>
+            <option value="standard" selected>Standard allowance</option>
+            <option value="typical" id="deductionTypicalOpt">Typical extra</option>
+            <option value="custom">Custom %</option>
+          </select>
+        </label>
+
+        <label class="field hidden" id="customPctWrap" for="deductionPct">
+          Custom deduction % of gross
+          <input type="number" id="deductionPct" min="0" max="50" step="1" value="10" inputmode="decimal" />
+          <span class="hint">Clamped 0–50%. Applied to both home and destination models.</span>
         </label>
 
         <div class="country-pair">
@@ -181,6 +197,8 @@
         </div>
       </div>
 
+      <section class="tax-panel hidden" id="taxPanel" aria-label="Illustrative tax estimates"></section>
+
       <section class="commodities" aria-labelledby="commHeading">
         <h2 id="commHeading">Local prices — a few basics</h2>
         <p class="intro" id="commIntro">Illustrative home vs destination prices. Not a full CPI basket. Dated in data.</p>
@@ -216,6 +234,19 @@
         Gaps are left null. Refresh with <code>scripts/fetch_commodities.py</code>.
       </p>
 
+      <h3>Illustrative tax estimates</h3>
+      <p>
+        Optional national/federal personal income tax models (progressive, flat, or none) live in
+        <code>data/taxes.json</code>, primarily from PwC Worldwide Tax Summaries. In <strong>Gross</strong> mode,
+        a supported home country converts entered gross → estimated net before PPP. Destination
+        <strong>gross-up</strong> estimates the gross needed abroad so estimated net ≈ the PPP-equivalent
+        take-home. Deduction assumption (none / standard / typical extra / custom %) applies to both sides.
+        Where brackets already include a 0% allowance band, standard mode does not subtract that allowance again.
+        Employee social contributions are included only when listed. Many local/state taxes, credits, rebates,
+        and filing-status rules are excluded. <strong>Not tax advice</strong> — illustrative for PPP context only.
+        Unsupported countries show a warning and never invent brackets.
+      </p>
+
       <h3>FAQ</h3>
       <details open>
         <summary>What does PPP mean here?</summary>
@@ -236,14 +267,14 @@
         <summary>Where do sources come from?</summary>
         <p>
           Country PPP/FX: World Bank WDI. Commodities: Economist Big Mac Index + Numbeo (illustrative).
-          Net/gross is a label only — taxes are not modeled.
+          Tax estimates: illustrative national/federal PIT from PwC Worldwide Tax Summaries (<code>data/taxes.json</code>) — not tax advice.
         </p>
       </details>
       <details>
         <summary>What this is not</summary>
         <p>
-          Not a tax calculator. Not a median / local-class lab.
-          For × median and relative class, see KingIndex.
+          Not personalized tax advice and not a full tax engine — only illustrative national/federal PIT
+          for PPP context. Not a median / local-class lab. For × median and relative class, see KingIndex.
         </p>
       </details>
     </div>
@@ -258,6 +289,7 @@
 </div>
 
 <script src="js/compute.js" defer></script>
+<script src="js/tax.js" defer></script>
 <script src="js/theme.js" defer></script>
 <script src="js/url.js" defer></script>
 <script src="js/pickers.js" defer></script>
