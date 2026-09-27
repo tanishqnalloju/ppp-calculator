@@ -381,6 +381,7 @@ select:hover { border-color: var(--border-strong); }
   font-family: var(--font-serif);
   font-size: var(--text-lg);
   font-weight: 600;
+  color: var(--text);
 }
 .tax-grid {
   display: grid;
@@ -403,7 +404,7 @@ select:hover { border-color: var(--border-strong); }
   gap: var(--space-3);
   font-size: var(--text-sm);
   margin: var(--space-1) 0;
-  color: var(--text-secondary);
+  color: var(--text);
 }
 .tax-row b {
   color: var(--text);
@@ -457,10 +458,32 @@ select:hover { border-color: var(--border-strong); }
 }
 
 [data-theme="dark"] .tax-panel {
-  background: var(--surface-answer-soft, var(--surface));
+  background: var(--surface-answer);
+  border-color: var(--border-answer);
+  color: var(--text-on-answer);
+  box-shadow: var(--shadow-answer);
+}
+[data-theme="dark"] .tax-heading,
+[data-theme="dark"] .tax-row b {
+  color: var(--text-on-answer);
+}
+[data-theme="dark"] .tax-col-title,
+[data-theme="dark"] .tax-row,
+[data-theme="dark"] .tax-note,
+[data-theme="dark"] .tax-disclaimer {
+  color: var(--text-muted-on-answer);
+}
+[data-theme="dark"] .tax-warnings {
+  background: var(--surface-answer-soft);
+  border-color: var(--border-answer);
+  color: var(--text-on-answer);
+}
+[data-theme="dark"] .tax-disclaimer strong,
+[data-theme="dark"] .tax-disclaimer code {
+  color: var(--text-on-answer);
 }
 [data-theme="dark"] .tax-unavailable {
-  color: #fbbf24;
+  color: var(--accent-on-answer);
 }
 
 /* —— Commodities: strip on small, table on wide —— */
