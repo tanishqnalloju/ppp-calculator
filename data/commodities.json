@@ -1,11 +1,11 @@
 {
   "meta": {
-    "generated_at": "2026-09-27T00:17:40Z",
+    "generated_at": "2026-09-27T09:21:26Z",
     "as_of": "2026-07",
     "as_of_detail": {
       "big_mac": "2026-07",
       "petrol": "2026-09",
-      "numbeo_ind": "2026-09 (live fetch prior to rate limit)"
+      "numbeo_countries": 38
     },
     "sources": [
       {
@@ -16,34 +16,23 @@
       {
         "name": "GlobalPetrolPrices.com",
         "url": "https://www.globalpetrolprices.com/",
-        "notes": "Gasoline local price per liter; weekly update."
+        "notes": "Gasoline local price per liter."
       },
       {
         "name": "Numbeo Cost of Living (country averages)",
         "url": "https://www.numbeo.com/cost-of-living/",
-        "notes": "Crowdsourced; IND only in this bake due to rate limit. Rice converted lb→kg."
+        "notes": "Crowdsourced; rice converted lb→kg. Often rate-limited."
       }
     ],
-    "notes": "Illustrative local prices; not a full CPI basket. Prefer honest partial coverage. Big Mac as_of 2026-07 (63 countries). Petrol as_of 2026-09 (37 countries). Grocery items beyond Big Mac currently limited where Numbeo was reachable.",
+    "notes": "Illustrative local prices; not a full CPI basket. Prefer honest partial coverage over invented numbers. Big Mac 63 countries; petrol 37; Numbeo groceries 38.",
     "gaps": [
-      "Numbeo live scrape rate-limited (HTTP 429 until ~2026-10-01); only IND groceries from a prior successful fetch.",
-      "Wayback Machine CDX unavailable (503/timeout) during build — could not backfill other Numbeo country pages.",
-      "Mobile prepaid 1GB not consistently published on Numbeo country pages — omitted.",
-      "No grocery basket (rice/bread/milk/eggs) for USA — Big Mac and/or petrol only where available.",
-      "No grocery basket (rice/bread/milk/eggs) for BGD — Big Mac and/or petrol only where available.",
-      "No grocery basket (rice/bread/milk/eggs) for GBR — Big Mac and/or petrol only where available.",
-      "No grocery basket (rice/bread/milk/eggs) for DEU — Big Mac and/or petrol only where available.",
-      "No grocery basket (rice/bread/milk/eggs) for JPN — Big Mac and/or petrol only where available.",
-      "No grocery basket (rice/bread/milk/eggs) for BRA — Big Mac and/or petrol only where available.",
-      "No grocery basket (rice/bread/milk/eggs) for MEX — Big Mac and/or petrol only where available.",
-      "No grocery basket (rice/bread/milk/eggs) for NGA — Big Mac and/or petrol only where available.",
-      "No grocery basket (rice/bread/milk/eggs) for PHL — Big Mac and/or petrol only where available."
+      "Mobile prepaid 1GB not consistently published on Numbeo country pages — omitted."
     ],
     "coverage": {
       "countries_with_any_price": 67,
       "big_mac_countries": 63,
       "petrol_countries": 37,
-      "grocery_countries": 1
+      "grocery_countries": 38
     }
   },
   "items": [
@@ -102,6 +91,36 @@
         "local": 19.0,
         "currency": "AED",
         "usd": 5.1731
+      },
+      "milk": {
+        "local": 6.38,
+        "currency": "AED",
+        "usd": null
+      },
+      "bread": {
+        "local": 4.76,
+        "currency": "AED",
+        "usd": null
+      },
+      "rice": {
+        "local": 8.0248,
+        "currency": "AED",
+        "usd": null
+      },
+      "eggs": {
+        "local": 11.45,
+        "currency": "AED",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 20.21,
+        "currency": "AED",
+        "usd": null
+      },
+      "broadband": {
+        "local": 334.0,
+        "currency": "AED",
+        "usd": null
       }
     },
     "ARG": {
@@ -114,6 +133,36 @@
         "local": 452.86,
         "currency": "ARS",
         "usd": 1.44
+      },
+      "milk": {
+        "local": 1.42,
+        "currency": "ARS",
+        "usd": null
+      },
+      "bread": {
+        "local": 2.11,
+        "currency": "ARS",
+        "usd": null
+      },
+      "rice": {
+        "local": 1.8078,
+        "currency": "ARS",
+        "usd": null
+      },
+      "eggs": {
+        "local": 2.66,
+        "currency": "ARS",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 3.57,
+        "currency": "ARS",
+        "usd": null
+      },
+      "broadband": {
+        "local": 26.53,
+        "currency": "ARS",
+        "usd": null
       }
     },
     "AUS": {
@@ -126,14 +175,44 @@
         "local": 1.54,
         "currency": "AUD",
         "usd": 1.59
+      },
+      "milk": {
+        "local": 2.47,
+        "currency": "AUD",
+        "usd": null
+      },
+      "bread": {
+        "local": 3.57,
+        "currency": "AUD",
+        "usd": null
+      },
+      "rice": {
+        "local": 3.2408,
+        "currency": "AUD",
+        "usd": null
+      },
+      "eggs": {
+        "local": 7.18,
+        "currency": "AUD",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 5.65,
+        "currency": "AUD",
+        "usd": null
+      },
+      "broadband": {
+        "local": 82.72,
+        "currency": "AUD",
+        "usd": null
       }
     },
     "AUT": {
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       }
     },
     "AZE": {
@@ -147,8 +226,8 @@
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       }
     },
     "BGD": {
@@ -156,6 +235,36 @@
         "local": 104.95,
         "currency": "BDT",
         "usd": 1.34
+      },
+      "milk": {
+        "local": 91.76,
+        "currency": "BDT",
+        "usd": null
+      },
+      "bread": {
+        "local": 61.26,
+        "currency": "BDT",
+        "usd": null
+      },
+      "rice": {
+        "local": 73.9651,
+        "currency": "BDT",
+        "usd": null
+      },
+      "eggs": {
+        "local": 142.72,
+        "currency": "BDT",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 230.03,
+        "currency": "BDT",
+        "usd": null
+      },
+      "broadband": {
+        "local": 1565.74,
+        "currency": "BDT",
+        "usd": null
       }
     },
     "BHR": {
@@ -175,6 +284,36 @@
         "local": 5.22,
         "currency": "BRL",
         "usd": 1.28
+      },
+      "milk": {
+        "local": 5.43,
+        "currency": "BRL",
+        "usd": null
+      },
+      "bread": {
+        "local": 7.86,
+        "currency": "BRL",
+        "usd": null
+      },
+      "rice": {
+        "local": 6.5036,
+        "currency": "BRL",
+        "usd": null
+      },
+      "eggs": {
+        "local": 11.54,
+        "currency": "BRL",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 10.52,
+        "currency": "BRL",
+        "usd": null
+      },
+      "broadband": {
+        "local": 105.34,
+        "currency": "BRL",
+        "usd": null
       }
     },
     "CAN": {
@@ -187,6 +326,36 @@
         "local": 1.56,
         "currency": "CAD",
         "usd": 1.49
+      },
+      "milk": {
+        "local": 3.12,
+        "currency": "CAD",
+        "usd": null
+      },
+      "bread": {
+        "local": 3.37,
+        "currency": "CAD",
+        "usd": null
+      },
+      "rice": {
+        "local": 5.0486,
+        "currency": "CAD",
+        "usd": null
+      },
+      "eggs": {
+        "local": 4.97,
+        "currency": "CAD",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 5.33,
+        "currency": "CAD",
+        "usd": null
+      },
+      "broadband": {
+        "local": 83.99,
+        "currency": "CAD",
+        "usd": null
       }
     },
     "CHE": {
@@ -199,6 +368,36 @@
         "local": 1.66,
         "currency": "CHF",
         "usd": 2.6
+      },
+      "milk": {
+        "local": 1.82,
+        "currency": "CHF",
+        "usd": null
+      },
+      "bread": {
+        "local": 2.74,
+        "currency": "CHF",
+        "usd": null
+      },
+      "rice": {
+        "local": 3.0203,
+        "currency": "CHF",
+        "usd": null
+      },
+      "eggs": {
+        "local": 6.27,
+        "currency": "CHF",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 5.11,
+        "currency": "CHF",
+        "usd": null
+      },
+      "broadband": {
+        "local": 47.54,
+        "currency": "CHF",
+        "usd": null
       }
     },
     "CHL": {
@@ -211,6 +410,36 @@
         "local": 56.9,
         "currency": "CLP",
         "usd": 1.5
+      },
+      "milk": {
+        "local": 1136.69,
+        "currency": "CLP",
+        "usd": null
+      },
+      "bread": {
+        "local": 1377.31,
+        "currency": "CLP",
+        "usd": null
+      },
+      "rice": {
+        "local": 1487.72,
+        "currency": "CLP",
+        "usd": null
+      },
+      "eggs": {
+        "local": 3427.91,
+        "currency": "CLP",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 2830.58,
+        "currency": "CLP",
+        "usd": null
+      },
+      "broadband": {
+        "local": 21265.0,
+        "currency": "CLP",
+        "usd": null
       }
     },
     "CHN": {
@@ -223,6 +452,36 @@
         "local": 7.66,
         "currency": "CNY",
         "usd": 1.33
+      },
+      "milk": {
+        "local": 11.88,
+        "currency": "CNY",
+        "usd": null
+      },
+      "bread": {
+        "local": 10.13,
+        "currency": "CNY",
+        "usd": null
+      },
+      "rice": {
+        "local": 6.3934,
+        "currency": "CNY",
+        "usd": null
+      },
+      "eggs": {
+        "local": 10.61,
+        "currency": "CNY",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 20.03,
+        "currency": "CNY",
+        "usd": null
+      },
+      "broadband": {
+        "local": 72.93,
+        "currency": "CNY",
+        "usd": null
       }
     },
     "COL": {
@@ -235,6 +494,36 @@
         "local": 903.95,
         "currency": "COP",
         "usd": 1.31
+      },
+      "milk": {
+        "local": 4744.96,
+        "currency": "COP",
+        "usd": null
+      },
+      "bread": {
+        "local": 6368.19,
+        "currency": "COP",
+        "usd": null
+      },
+      "rice": {
+        "local": 5167.3,
+        "currency": "COP",
+        "usd": null
+      },
+      "eggs": {
+        "local": 9529.07,
+        "currency": "COP",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 8517.06,
+        "currency": "COP",
+        "usd": null
+      },
+      "broadband": {
+        "local": 92861.21,
+        "currency": "COP",
+        "usd": null
       }
     },
     "CRI": {
@@ -255,13 +544,43 @@
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       },
       "petrol": {
         "local": 1.58,
         "currency": "EUR",
         "usd": 2.61
+      },
+      "milk": {
+        "local": 1.17,
+        "currency": "EUR",
+        "usd": null
+      },
+      "bread": {
+        "local": 1.73,
+        "currency": "EUR",
+        "usd": null
+      },
+      "rice": {
+        "local": 3.1306,
+        "currency": "EUR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 3.41,
+        "currency": "EUR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 3.61,
+        "currency": "EUR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 42.95,
+        "currency": "EUR",
+        "usd": null
       }
     },
     "DNK": {
@@ -281,40 +600,130 @@
         "local": 11.31,
         "currency": "EGP",
         "usd": 0.47
+      },
+      "milk": {
+        "local": 45.49,
+        "currency": "EGP",
+        "usd": null
+      },
+      "bread": {
+        "local": 31.86,
+        "currency": "EGP",
+        "usd": null
+      },
+      "rice": {
+        "local": 34.6126,
+        "currency": "EGP",
+        "usd": null
+      },
+      "eggs": {
+        "local": 68.09,
+        "currency": "EGP",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 77.26,
+        "currency": "EGP",
+        "usd": null
+      },
+      "broadband": {
+        "local": 677.87,
+        "currency": "EGP",
+        "usd": null
       }
     },
     "ESP": {
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       },
       "petrol": {
         "local": 1.43,
         "currency": "EUR",
         "usd": 2.21
+      },
+      "milk": {
+        "local": 1.06,
+        "currency": "EUR",
+        "usd": null
+      },
+      "bread": {
+        "local": 1.22,
+        "currency": "EUR",
+        "usd": null
+      },
+      "rice": {
+        "local": 1.4551,
+        "currency": "EUR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 3.01,
+        "currency": "EUR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 2.13,
+        "currency": "EUR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 28.55,
+        "currency": "EUR",
+        "usd": null
       }
     },
     "FIN": {
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       }
     },
     "FRA": {
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       },
       "petrol": {
         "local": 1.62,
         "currency": "EUR",
         "usd": 2.46
+      },
+      "milk": {
+        "local": 1.19,
+        "currency": "EUR",
+        "usd": null
+      },
+      "bread": {
+        "local": 1.64,
+        "currency": "EUR",
+        "usd": null
+      },
+      "rice": {
+        "local": 2.3369,
+        "currency": "EUR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 3.79,
+        "currency": "EUR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 3.42,
+        "currency": "EUR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 30.32,
+        "currency": "EUR",
+        "usd": null
       }
     },
     "GBR": {
@@ -327,6 +736,36 @@
         "local": 1.35,
         "currency": "GBP",
         "usd": 2.3
+      },
+      "milk": {
+        "local": 1.25,
+        "currency": "GBP",
+        "usd": null
+      },
+      "bread": {
+        "local": 1.15,
+        "currency": "GBP",
+        "usd": null
+      },
+      "rice": {
+        "local": 1.6535,
+        "currency": "GBP",
+        "usd": null
+      },
+      "eggs": {
+        "local": 3.07,
+        "currency": "GBP",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 3.59,
+        "currency": "GBP",
+        "usd": null
+      },
+      "broadband": {
+        "local": 32.01,
+        "currency": "GBP",
+        "usd": null
       }
     },
     "GHA": {
@@ -334,6 +773,36 @@
         "local": 9.29,
         "currency": "GHS",
         "usd": 1.55
+      },
+      "milk": {
+        "local": 38.51,
+        "currency": "GHS",
+        "usd": null
+      },
+      "bread": {
+        "local": 16.99,
+        "currency": "GHS",
+        "usd": null
+      },
+      "rice": {
+        "local": 33.885,
+        "currency": "GHS",
+        "usd": null
+      },
+      "eggs": {
+        "local": 30.52,
+        "currency": "GHS",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 46.61,
+        "currency": "GHS",
+        "usd": null
+      },
+      "broadband": {
+        "local": 550.88,
+        "currency": "GHS",
+        "usd": null
       }
     },
     "GTM": {
@@ -374,6 +843,36 @@
         "local": 647.67,
         "currency": "IDR",
         "usd": 1.07
+      },
+      "milk": {
+        "local": 21554.19,
+        "currency": "IDR",
+        "usd": null
+      },
+      "bread": {
+        "local": 18247.57,
+        "currency": "IDR",
+        "usd": null
+      },
+      "rice": {
+        "local": 15276.98,
+        "currency": "IDR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 26922.82,
+        "currency": "IDR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 28157.23,
+        "currency": "IDR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 349464.84,
+        "currency": "IDR",
+        "usd": null
       }
     },
     "IND": {
@@ -422,8 +921,8 @@
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       }
     },
     "ISR": {
@@ -437,13 +936,43 @@
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       },
       "petrol": {
         "local": 1.68,
         "currency": "EUR",
         "usd": 2.47
+      },
+      "milk": {
+        "local": 1.43,
+        "currency": "EUR",
+        "usd": null
+      },
+      "bread": {
+        "local": 1.91,
+        "currency": "EUR",
+        "usd": null
+      },
+      "rice": {
+        "local": 2.6235,
+        "currency": "EUR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 3.71,
+        "currency": "EUR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 1.77,
+        "currency": "EUR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 27.18,
+        "currency": "EUR",
+        "usd": null
       }
     },
     "JOR": {
@@ -463,6 +992,36 @@
         "local": 154.75,
         "currency": "JPY",
         "usd": 1.08
+      },
+      "milk": {
+        "local": 229.62,
+        "currency": "JPY",
+        "usd": null
+      },
+      "bread": {
+        "local": 212.37,
+        "currency": "JPY",
+        "usd": null
+      },
+      "rice": {
+        "local": 780.06,
+        "currency": "JPY",
+        "usd": null
+      },
+      "eggs": {
+        "local": 325.46,
+        "currency": "JPY",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 496.89,
+        "currency": "JPY",
+        "usd": null
+      },
+      "broadband": {
+        "local": 5161.86,
+        "currency": "JPY",
+        "usd": null
       }
     },
     "KEN": {
@@ -470,6 +1029,36 @@
         "local": 144.54,
         "currency": "KES",
         "usd": 1.64
+      },
+      "milk": {
+        "local": 98.5,
+        "currency": "KES",
+        "usd": null
+      },
+      "bread": {
+        "local": 60.57,
+        "currency": "KES",
+        "usd": null
+      },
+      "rice": {
+        "local": 199.87,
+        "currency": "KES",
+        "usd": null
+      },
+      "eggs": {
+        "local": 210.83,
+        "currency": "KES",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 324.52,
+        "currency": "KES",
+        "usd": null
+      },
+      "broadband": {
+        "local": 4848.21,
+        "currency": "KES",
+        "usd": null
       }
     },
     "KOR": {
@@ -482,6 +1071,36 @@
         "local": 605.68,
         "currency": "KRW",
         "usd": 1.41
+      },
+      "milk": {
+        "local": 2902.55,
+        "currency": "KRW",
+        "usd": null
+      },
+      "bread": {
+        "local": 3614.63,
+        "currency": "KRW",
+        "usd": null
+      },
+      "rice": {
+        "local": 4583.06,
+        "currency": "KRW",
+        "usd": null
+      },
+      "eggs": {
+        "local": 4204.55,
+        "currency": "KRW",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 5188.0,
+        "currency": "KRW",
+        "usd": null
+      },
+      "broadband": {
+        "local": 31792.84,
+        "currency": "KRW",
+        "usd": null
       }
     },
     "KWT": {
@@ -515,6 +1134,36 @@
         "local": 22.14,
         "currency": "MXN",
         "usd": 1.64
+      },
+      "milk": {
+        "local": 29.81,
+        "currency": "MXN",
+        "usd": null
+      },
+      "bread": {
+        "local": 45.78,
+        "currency": "MXN",
+        "usd": null
+      },
+      "rice": {
+        "local": 31.8127,
+        "currency": "MXN",
+        "usd": null
+      },
+      "eggs": {
+        "local": 45.44,
+        "currency": "MXN",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 65.29,
+        "currency": "MXN",
+        "usd": null
+      },
+      "broadband": {
+        "local": 529.83,
+        "currency": "MXN",
+        "usd": null
       }
     },
     "MYS": {
@@ -527,6 +1176,36 @@
         "local": 2.15,
         "currency": "MYR",
         "usd": 1.07
+      },
+      "milk": {
+        "local": 7.69,
+        "currency": "MYR",
+        "usd": null
+      },
+      "bread": {
+        "local": 3.95,
+        "currency": "MYR",
+        "usd": null
+      },
+      "rice": {
+        "local": 5.9084,
+        "currency": "MYR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 8.62,
+        "currency": "MYR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 11.57,
+        "currency": "MYR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 112.3,
+        "currency": "MYR",
+        "usd": null
       }
     },
     "NGA": {
@@ -534,6 +1213,36 @@
         "local": 395.07,
         "currency": "NGN",
         "usd": 1.01
+      },
+      "milk": {
+        "local": 3729.85,
+        "currency": "NGN",
+        "usd": null
+      },
+      "bread": {
+        "local": 1147.29,
+        "currency": "NGN",
+        "usd": null
+      },
+      "rice": {
+        "local": 1858.92,
+        "currency": "NGN",
+        "usd": null
+      },
+      "eggs": {
+        "local": 2114.12,
+        "currency": "NGN",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 3098.82,
+        "currency": "NGN",
+        "usd": null
+      },
+      "broadband": {
+        "local": 27374.85,
+        "currency": "NGN",
+        "usd": null
       }
     },
     "NIC": {
@@ -547,13 +1256,43 @@
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       },
       "petrol": {
         "local": 1.82,
         "currency": "EUR",
         "usd": 2.78
+      },
+      "milk": {
+        "local": 1.17,
+        "currency": "EUR",
+        "usd": null
+      },
+      "bread": {
+        "local": 1.84,
+        "currency": "EUR",
+        "usd": null
+      },
+      "rice": {
+        "local": 2.5353,
+        "currency": "EUR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 4.29,
+        "currency": "EUR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 3.73,
+        "currency": "EUR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 44.99,
+        "currency": "EUR",
+        "usd": null
       }
     },
     "NOR": {
@@ -587,6 +1326,36 @@
         "local": 174.74,
         "currency": "PKR",
         "usd": 1.42
+      },
+      "milk": {
+        "local": 231.29,
+        "currency": "PKR",
+        "usd": null
+      },
+      "bread": {
+        "local": 152.54,
+        "currency": "PKR",
+        "usd": null
+      },
+      "rice": {
+        "local": 332.66,
+        "currency": "PKR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 331.28,
+        "currency": "PKR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 551.96,
+        "currency": "PKR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 4380.64,
+        "currency": "PKR",
+        "usd": null
       }
     },
     "PER": {
@@ -599,6 +1368,36 @@
         "local": 4.2,
         "currency": "PEN",
         "usd": 1.71
+      },
+      "milk": {
+        "local": 5.11,
+        "currency": "PEN",
+        "usd": null
+      },
+      "bread": {
+        "local": 7.33,
+        "currency": "PEN",
+        "usd": null
+      },
+      "rice": {
+        "local": 4.6077,
+        "currency": "PEN",
+        "usd": null
+      },
+      "eggs": {
+        "local": 9.13,
+        "currency": "PEN",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 10.44,
+        "currency": "PEN",
+        "usd": null
+      },
+      "broadband": {
+        "local": 90.32,
+        "currency": "PEN",
+        "usd": null
       }
     },
     "PHL": {
@@ -611,6 +1410,36 @@
         "local": 58.46,
         "currency": "PHP",
         "usd": 1.46
+      },
+      "milk": {
+        "local": 107.54,
+        "currency": "PHP",
+        "usd": null
+      },
+      "bread": {
+        "local": 68.35,
+        "currency": "PHP",
+        "usd": null
+      },
+      "rice": {
+        "local": 56.9895,
+        "currency": "PHP",
+        "usd": null
+      },
+      "eggs": {
+        "local": 121.06,
+        "currency": "PHP",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 139.32,
+        "currency": "PHP",
+        "usd": null
+      },
+      "broadband": {
+        "local": 1704.12,
+        "currency": "PHP",
+        "usd": null
       }
     },
     "POL": {
@@ -623,14 +1452,44 @@
         "local": 5.57,
         "currency": "PLN",
         "usd": 2.08
+      },
+      "milk": {
+        "local": 3.96,
+        "currency": "PLN",
+        "usd": null
+      },
+      "bread": {
+        "local": 4.66,
+        "currency": "PLN",
+        "usd": null
+      },
+      "rice": {
+        "local": 5.6659,
+        "currency": "PLN",
+        "usd": null
+      },
+      "eggs": {
+        "local": 13.63,
+        "currency": "PLN",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 14.26,
+        "currency": "PLN",
+        "usd": null
+      },
+      "broadband": {
+        "local": 67.34,
+        "currency": "PLN",
+        "usd": null
       }
     },
     "PRT": {
       "big_mac": {
         "local": 6.19,
         "currency": "EUR",
-        "usd": 7.07922094259998,
-        "note": "Euro-area average (Economist EUZ)"
+        "usd": 7.0792,
+        "note": "Euro-area average"
       }
     },
     "QAT": {
@@ -657,6 +1516,36 @@
         "local": 2.01,
         "currency": "SAR",
         "usd": 0.62
+      },
+      "milk": {
+        "local": 6.45,
+        "currency": "SAR",
+        "usd": null
+      },
+      "bread": {
+        "local": 3.62,
+        "currency": "SAR",
+        "usd": null
+      },
+      "rice": {
+        "local": 8.2012,
+        "currency": "SAR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 9.57,
+        "currency": "SAR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 13.77,
+        "currency": "SAR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 257.61,
+        "currency": "SAR",
+        "usd": null
       }
     },
     "SGP": {
@@ -669,6 +1558,36 @@
         "local": 2.44,
         "currency": "SGD",
         "usd": 2.44
+      },
+      "milk": {
+        "local": 3.87,
+        "currency": "SGD",
+        "usd": null
+      },
+      "bread": {
+        "local": 2.92,
+        "currency": "SGD",
+        "usd": null
+      },
+      "rice": {
+        "local": 3.5274,
+        "currency": "SGD",
+        "usd": null
+      },
+      "eggs": {
+        "local": 4.67,
+        "currency": "SGD",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 6.61,
+        "currency": "SGD",
+        "usd": null
+      },
+      "broadband": {
+        "local": 34.58,
+        "currency": "SGD",
+        "usd": null
       }
     },
     "SWE": {
@@ -681,6 +1600,36 @@
         "local": 16.63,
         "currency": "SEK",
         "usd": 1.79
+      },
+      "milk": {
+        "local": 16.24,
+        "currency": "SEK",
+        "usd": null
+      },
+      "bread": {
+        "local": 26.53,
+        "currency": "SEK",
+        "usd": null
+      },
+      "rice": {
+        "local": 35.5606,
+        "currency": "SEK",
+        "usd": null
+      },
+      "eggs": {
+        "local": 41.64,
+        "currency": "SEK",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 46.53,
+        "currency": "SEK",
+        "usd": null
+      },
+      "broadband": {
+        "local": 380.0,
+        "currency": "SEK",
+        "usd": null
       }
     },
     "THA": {
@@ -693,6 +1642,36 @@
         "local": 39.55,
         "currency": "THB",
         "usd": 1.48
+      },
+      "milk": {
+        "local": 60.34,
+        "currency": "THB",
+        "usd": null
+      },
+      "bread": {
+        "local": 41.68,
+        "currency": "THB",
+        "usd": null
+      },
+      "rice": {
+        "local": 43.2988,
+        "currency": "THB",
+        "usd": null
+      },
+      "eggs": {
+        "local": 70.28,
+        "currency": "THB",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 69.26,
+        "currency": "THB",
+        "usd": null
+      },
+      "broadband": {
+        "local": 617.73,
+        "currency": "THB",
+        "usd": null
       }
     },
     "TUR": {
@@ -705,6 +1684,36 @@
         "local": 22.11,
         "currency": "TRY",
         "usd": 1.65
+      },
+      "milk": {
+        "local": 51.09,
+        "currency": "TRY",
+        "usd": null
+      },
+      "bread": {
+        "local": 43.96,
+        "currency": "TRY",
+        "usd": null
+      },
+      "rice": {
+        "local": 106.53,
+        "currency": "TRY",
+        "usd": null
+      },
+      "eggs": {
+        "local": 108.09,
+        "currency": "TRY",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 180.22,
+        "currency": "TRY",
+        "usd": null
+      },
+      "broadband": {
+        "local": 762.32,
+        "currency": "TRY",
+        "usd": null
       }
     },
     "TWN": {
@@ -738,6 +1747,36 @@
         "local": 0.88,
         "currency": "USD",
         "usd": 0.88
+      },
+      "milk": {
+        "local": 1.06,
+        "currency": "USD",
+        "usd": null
+      },
+      "bread": {
+        "local": 3.31,
+        "currency": "USD",
+        "usd": null
+      },
+      "rice": {
+        "local": 4.5856,
+        "currency": "USD",
+        "usd": null
+      },
+      "eggs": {
+        "local": 4.31,
+        "currency": "USD",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 5.47,
+        "currency": "USD",
+        "usd": null
+      },
+      "broadband": {
+        "local": 73.48,
+        "currency": "USD",
+        "usd": null
       }
     },
     "VEN": {
@@ -757,6 +1796,36 @@
         "local": 217.5,
         "currency": "VND",
         "usd": 1.02
+      },
+      "milk": {
+        "local": 38801.61,
+        "currency": "VND",
+        "usd": null
+      },
+      "bread": {
+        "local": 23310.63,
+        "currency": "VND",
+        "usd": null
+      },
+      "rice": {
+        "local": 24239.27,
+        "currency": "VND",
+        "usd": null
+      },
+      "eggs": {
+        "local": 39432.43,
+        "currency": "VND",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 43865.45,
+        "currency": "VND",
+        "usd": null
+      },
+      "broadband": {
+        "local": 238913.27,
+        "currency": "VND",
+        "usd": null
       }
     },
     "ZAF": {
@@ -769,6 +1838,36 @@
         "local": 18.58,
         "currency": "ZAR",
         "usd": 1.64
+      },
+      "milk": {
+        "local": 19.84,
+        "currency": "ZAR",
+        "usd": null
+      },
+      "bread": {
+        "local": 16.54,
+        "currency": "ZAR",
+        "usd": null
+      },
+      "rice": {
+        "local": 29.4538,
+        "currency": "ZAR",
+        "usd": null
+      },
+      "eggs": {
+        "local": 41.81,
+        "currency": "ZAR",
+        "usd": null
+      },
+      "cappuccino": {
+        "local": 38.49,
+        "currency": "ZAR",
+        "usd": null
+      },
+      "broadband": {
+        "local": 662.89,
+        "currency": "ZAR",
+        "usd": null
       }
     }
   }
