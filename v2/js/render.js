@@ -443,26 +443,56 @@
       ? `<ul class="tax-warnings">${warnings.map((w) => `<li>${w}</li>`).join("")}</ul>`
       : "";
 
-    const dedNote = itype === "gross"
-      ? "Set a deduction per country below. Home applies to gross→net; destination applies to the PPP gross-up. Expand for the full calculation."
-      : "Net mode: home est. tax is 0 (take-home as entered). Destination gross-up still uses the dest deduction. Panel stays collapsed — switch to Gross for a home tax estimate.";
+    const noteEl = el("taxDedNote");
+    const dedMount = el("taxDeductionMount");
+    const results = el("taxResultsMount");
+    const warnMount = el("taxWarnMount");
+    const footEl = el("taxFootNote");
 
-    // Net: always collapsed (no home tax story). Gross: remember user toggle.
+    // Net: keep the section title + Tax ≈ 0 only; hide copy, deductions, and full block.
     if (itype === "net") {
       global.PPP._taxOpen = global.PPP._taxOpen || Object.create(null);
       global.PPP._taxOpen.both = false;
+      if (noteEl) {
+        noteEl.textContent = "";
+        noteEl.classList.add("hidden");
+      }
+      if (dedMount) {
+        dedMount.innerHTML = "";
+        dedMount.dataset.fp = "";
+        dedMount.classList.add("hidden");
+      }
+      if (results) {
+        const zeroTax = escapeHtml(moneyOrDash(0, home.currency, home.iso3));
+        results.innerHTML =
+          `<div class="tax-net-zero">` +
+          `<div class="tax-row"><span>Tax</span><b>≈ ${zeroTax}</b></div>` +
+          `</div>`;
+        results.classList.remove("hidden");
+      }
+      if (warnMount) warnMount.innerHTML = "";
+      if (footEl) footEl.classList.add("hidden");
+      panel.classList.add("tax-panel-net");
+      return;
     }
-    const open = itype === "gross" && !!(global.PPP._taxOpen && global.PPP._taxOpen.both);
+
+    panel.classList.remove("tax-panel-net");
+    if (noteEl) noteEl.classList.remove("hidden");
+    if (dedMount) dedMount.classList.remove("hidden");
+    if (footEl) footEl.classList.remove("hidden");
+
+    const dedNote =
+      "Set a deduction per country below. Home applies to gross→net; destination applies to the PPP gross-up. Expand for the full calculation.";
+
+    const open = !!(global.PPP._taxOpen && global.PPP._taxOpen.both);
 
     const homeBase = incomeLocal || 0;
     const destBase = (destGross && destGross.gross) || 0;
     panel.setAttribute("data-ded-base-home", String(homeBase || 0));
     panel.setAttribute("data-ded-base-dest", String(destBase || 0));
 
-    const noteEl = el("taxDedNote");
     if (noteEl) noteEl.textContent = dedNote;
 
-    const dedMount = el("taxDeductionMount");
     const active = panel.querySelector("input[data-ded=\"value\"]:focus, select[data-ded=\"mode\"]:focus");
     const focusSide = active && active.getAttribute("data-side");
     const focusKind = active && active.getAttribute("data-ded");
@@ -494,8 +524,8 @@
       }
     }
 
-    const results = el("taxResultsMount");
     if (results) {
+      results.classList.remove("hidden");
       results.innerHTML =
         `<details class="tax-col" data-tax-key="both"${open ? " open" : ""}>` +
         `<summary class="tax-summary">` +
@@ -515,7 +545,6 @@
         `</div></details>`;
     }
 
-    const warnMount = el("taxWarnMount");
     if (warnMount) warnMount.innerHTML = warnHtml;
 
     if (focusSide && focusKind && dedMount) {

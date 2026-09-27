@@ -1049,3 +1049,14 @@ details.tax-col[open] .tax-chevron {
 }
 
 .tax-nil { font-weight: 600; }
+
+.tax-net-zero {
+  margin: 0;
+  padding: var(--space-2) 0 0;
+}
+.tax-net-zero .tax-row {
+  font-size: var(--text-sm);
+}
+.tax-panel-net .tax-heading {
+  margin-bottom: var(--space-1);
+}
