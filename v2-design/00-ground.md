@@ -65,7 +65,7 @@ Reliability gate: finite `pli_us ≥ 0.05`, finite positive `ppp`/`fx`; excluded
 ## Typography & theme notes
 
 - Fonts: **Instrument Sans** (UI) + **Newsreader** (H1, tagline, lead, metric values, section titles) via Google Fonts import.  
-- Light warm paper (`#f7f5f0`) / dark **warm dusk** (`#252820` mid-olive); accent green (`#1a5c45` light / `#7bc4a0` dark).  
+- Light warm paper (`#f7f5f0`) + forest accent (`#1a5c45`). v2 dark is **Moon paper**: ink desk (`#161410` / canvas `#1a1814`) with parchment answer cards (`#e8e0d0`, dark card text `#1c1915`, forest accent `#1a5c45` on parchment). Header/rail/footer stay ink — not full-page parchment.  
 - Theme: `data-theme` on `<html>`, FOUC-preventing inline script, `localStorage` key `ppp-calc-theme`, respects `prefers-color-scheme`.  
 - Content width: `--content: 42rem` single column.  
 - Reduced motion respected globally. Focus: `:focus { outline: none }` + `:focus-visible` accent ring.

@@ -545,3 +545,89 @@ select:hover { border-color: var(--border-strong); }
   font-weight: 500;
 }
 .app-footer a:hover { text-decoration: underline; }
+
+/* —— Moon paper: parchment answer surfaces (dark only) ——
+   Ink desk stays on page/rail/chrome. Only answer cards, evidence chips,
+   and commodity cells lift as cream parchment. */
+[data-theme="dark"] .answer-primary {
+  background: var(--accent-soft-on-answer);
+  border-color: var(--accent-on-answer);
+  color: var(--text-on-answer);
+  box-shadow: var(--shadow-answer);
+}
+[data-theme="dark"] .answer-primary .label,
+[data-theme="dark"] .answer-primary .sub {
+  color: var(--text-muted-on-answer);
+}
+[data-theme="dark"] .ppp-value {
+  color: var(--accent-on-answer);
+}
+
+[data-theme="dark"] .answer-secondary {
+  background: var(--surface-answer);
+  border-color: var(--border-answer);
+  color: var(--text-on-answer);
+  box-shadow: var(--shadow-answer);
+}
+[data-theme="dark"] .fx-value {
+  color: var(--text-on-answer);
+}
+[data-theme="dark"] .fx-block .label,
+[data-theme="dark"] .fx-block .sub,
+[data-theme="dark"] .delta-note {
+  color: var(--text-muted-on-answer);
+}
+[data-theme="dark"] .delta-note {
+  border-top-color: var(--border-answer);
+}
+
+[data-theme="dark"] .chip {
+  background: var(--surface-answer-soft);
+  border-color: var(--border-answer);
+  color: var(--text-on-answer);
+  box-shadow: var(--shadow-answer);
+}
+[data-theme="dark"] .chip strong {
+  color: var(--text-on-answer);
+}
+[data-theme="dark"] .chip .muted {
+  color: var(--text-muted-on-answer);
+}
+
+/* Commodity strip: parchment-tinted cells on ink canvas */
+[data-theme="dark"] .card {
+  background: var(--surface-answer-soft);
+  border-color: var(--border-answer);
+  color: var(--text-on-answer);
+  box-shadow: var(--shadow-answer);
+}
+[data-theme="dark"] .card .name,
+[data-theme="dark"] .card .row b {
+  color: var(--text-on-answer);
+}
+[data-theme="dark"] .card .unit,
+[data-theme="dark"] .card .row {
+  color: var(--text-muted-on-answer);
+}
+
+[data-theme="dark"] .comm-table {
+  background: var(--surface-answer);
+  border-color: var(--border-answer);
+  color: var(--text-on-answer);
+  box-shadow: var(--shadow-answer);
+}
+[data-theme="dark"] .comm-table th,
+[data-theme="dark"] .comm-table td {
+  border-bottom-color: var(--border-answer);
+}
+[data-theme="dark"] .comm-table thead th {
+  background: var(--surface-answer-soft);
+  color: var(--text-muted-on-answer);
+}
+[data-theme="dark"] .comm-table tbody th,
+[data-theme="dark"] .comm-table .num {
+  color: var(--text-on-answer);
+}
+[data-theme="dark"] .comm-table .muted {
+  color: var(--text-muted-on-answer);
+}
