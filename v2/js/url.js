@@ -1,24 +1,47 @@
 (function (global) {
   "use strict";
 
+  /** Default demo: India (INR) → United States (USD). Always write iso3 in the URL. */
+  const DEFAULT_HOME = "IND";
+  const DEFAULT_DEST = "USA";
+  /** Currency codes accepted in ?home= / ?dest= (still written as iso3). */
+  const CURRENCY_ALIASES = { INR: "IND", USD: "USA" };
+
+  /** Resolve URL home/dest: prefer iso3, then currency alias, then c.currency scan. */
+  function resolveCountryCode(raw, byIso) {
+    if (!raw) return null;
+    const code = String(raw).trim().toUpperCase();
+    if (!code) return null;
+    if (byIso[code]) return code;
+    const aliased = CURRENCY_ALIASES[code];
+    if (aliased && byIso[aliased]) return aliased;
+    const matches = [];
+    for (const c of Object.values(byIso)) {
+      if (c && c.currency === code) matches.push(c.iso3);
+    }
+    if (!matches.length) return null;
+    if (aliased && matches.includes(aliased)) return aliased;
+    return matches[0];
+  }
+
   function readParams(byIso, setters) {
     const q = new URLSearchParams(location.search);
     const incomeRaw = q.get("income");
     const type = q.get("type");
-    const home = q.get("home");
-    const dest = q.get("dest");
+    const homeIso = resolveCountryCode(q.get("home"), byIso);
+    const destIso = resolveCountryCode(q.get("dest"), byIso);
 
     if (type === "gross" || type === "net") setters.setType(type);
-    if (home && byIso[home]) setters.setHome(home, true);
-    if (dest && byIso[dest]) setters.setDest(dest, true);
+    if (homeIso) setters.setHome(homeIso, true);
+    if (destIso) setters.setDest(destIso, true);
 
     if (incomeRaw) {
       const n = global.PPP.parseIncome(incomeRaw);
       if (n > 0) {
-        const homeIso = (home && byIso[home]) ? home : setters.getHome();
-        const c = byIso[homeIso];
+        const iso = homeIso || setters.getHome();
+        const c = byIso[iso];
         setters.setIncome(
-          global.PPP.formatIncomeInput(n, c && c.currency, homeIso)
+          global.PPP.formatIncomeInput(n, c && c.currency, iso)
         );
       }
     }
@@ -28,9 +51,9 @@
     const q = new URLSearchParams();
     const incomeLocal = global.PPP.parseIncome(state.income);
     q.set("income", String(incomeLocal > 0 ? Math.round(incomeLocal) : ""));
-    q.set("home", state.home || "IND");
+    q.set("home", state.home || DEFAULT_HOME);
     q.set("type", state.type || "net");
-    q.set("dest", state.dest || "USA");
+    q.set("dest", state.dest || DEFAULT_DEST);
     return q;
   }
 
@@ -56,6 +79,9 @@
   }
 
   global.PPP = Object.assign(global.PPP || {}, {
-    url: { readParams, writeParams, buildQuery, kingIndexHref, shareUrl },
+    DEFAULT_HOME,
+    DEFAULT_DEST,
+    resolveCountryCode,
+    url: { readParams, writeParams, buildQuery, kingIndexHref, shareUrl, resolveCountryCode },
   });
 })(typeof window !== "undefined" ? window : globalThis);

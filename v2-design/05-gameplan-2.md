@@ -94,9 +94,9 @@ For the same query string, v2 numeric outputs must match v1 (formatting locale m
 
 | Sample URL | Checks |
 |------------|--------|
-| `?income=800000&home=IND&type=net&dest=USA` | PPP equiv, FX wire, cost vs home %, PLI vs US |
-| `?income=800000&home=IND&type=net&dest=BGD` | Same trio + PLI; commodities may be partial |
+| `?income=800000&home=IND&type=net&dest=USA` | **Primary / default pair** — PPP equiv, FX wire, cost vs home %, PLI vs US |
 | `?income=120000&home=USA&type=gross&dest=IND` | Swap direction; type label preserved in lead |
+| `?income=800000&home=IND&type=net&dest=BGD` | Secondary parity only (not a default); commodities may be partial |
 | Unreliable / excluded pair (if any in data) | Warn + hide Infinity/NaN |
 
 Also: URL `replaceState` keeps four params; KingIndex link forwards them; theme toggle works light/dark; keyboard combobox usable; loading state appears before data resolves.

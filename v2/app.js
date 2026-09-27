@@ -1,6 +1,10 @@
 (function () {
   "use strict";
 
+  const DEFAULT_HOME = "IND";
+  const DEFAULT_DEST = "USA";
+  const DEFAULT_INCOME = 800000;
+
   const el = (id) => document.getElementById(id);
   let byIso = {};
   let countriesSorted = [];
@@ -100,9 +104,9 @@
         getCountries: () => countriesSorted,
       });
 
-      if (byIso.IND) homePicker.setValue("IND", true);
+      if (byIso[DEFAULT_HOME]) homePicker.setValue(DEFAULT_HOME, true);
       else if (countriesSorted[0]) homePicker.setValue(countriesSorted[0].iso3, true);
-      if (byIso.USA) destPicker.setValue("USA", true);
+      if (byIso[DEFAULT_DEST]) destPicker.setValue(DEFAULT_DEST, true);
       else if (countriesSorted[1]) destPicker.setValue(countriesSorted[1].iso3, true);
 
       PPP.url.readParams(byIso, {
@@ -126,7 +130,7 @@
 
       if (!el("income").value) {
         const home = byIso[el("home").value];
-        el("income").value = PPP.formatIncomeInput(800000, home && home.currency, home && home.iso3);
+        el("income").value = PPP.formatIncomeInput(DEFAULT_INCOME, home && home.currency, home && home.iso3);
       }
 
       PPP.render.showStatus(null);

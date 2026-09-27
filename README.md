@@ -22,9 +22,11 @@ One screen, four answers plus a quiet commodity strip:
 5. **Commodity strip** — 8 illustrative goods (home vs dest), dated
 
 URL params (KingIndex-compatible): `income`, `home`, `type` (`net`|`gross`), `dest`.  
-Defaults: `home=IND`, `dest=USA`. No path routes.
+Defaults: India (INR) → United States (USD) — `home=IND`, `dest=USA`. Empty income demos as `800000` (INR). No path routes.
 
-Example: `/?income=800000&home=IND&type=net&dest=BGD`
+`home` / `dest` accept iso3 or currency aliases (`INR`→`IND`, `USD`→`USA`); the URL always writes iso3.
+
+Example: `/?income=800000&home=IND&type=net&dest=USA`
 
 ## Math
 
@@ -65,7 +67,7 @@ Commodities are **illustrative**, not a CPI basket. Prefer honest partial covera
 ```bash
 # Simple static server (required — fetch() needs HTTP)
 python3 -m http.server 8765
-# open http://127.0.0.1:8765/?income=800000&home=IND&type=net&dest=BGD
+# open http://127.0.0.1:8765/?income=800000&home=IND&type=net&dest=USA
 ```
 
 Or with Wrangler:

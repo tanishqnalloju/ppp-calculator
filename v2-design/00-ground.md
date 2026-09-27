@@ -48,7 +48,7 @@ Country list: ~208 rows from `data/countries.json` (iso3, name, currency, ppp, f
 ## Query params (must keep in v2)
 
 `income`, `home`, `type` (`net`|`gross`), `dest`  
-Written via `history.replaceState` (debounced 350 ms). KingIndex link receives the same params. Example: `/?income=800000&home=IND&type=net&dest=BGD`. No path routes.
+Written via `history.replaceState` (debounced 350 ms). KingIndex link receives the same params. Defaults: India (INR) → United States (USD) — `home=IND`, `dest=USA`. Example: `/?income=800000&home=IND&type=net&dest=USA`. No path routes.
 
 ## Math (unchanged for v2)
 

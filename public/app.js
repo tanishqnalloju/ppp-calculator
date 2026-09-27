@@ -1,6 +1,30 @@
 (function () {
   "use strict";
 
+  /** Default demo: India (INR) → United States (USD). Always write iso3 in the URL. */
+  const DEFAULT_HOME = "IND";
+  const DEFAULT_DEST = "USA";
+  const DEFAULT_INCOME = 800000;
+  /** Currency codes accepted in ?home= / ?dest= (still written as iso3). */
+  const CURRENCY_ALIASES = { INR: "IND", USD: "USA" };
+
+  /** Resolve URL home/dest: prefer iso3, then currency alias, then c.currency scan. */
+  function resolveCountryCode(raw, byIsoMap) {
+    if (!raw) return null;
+    const code = String(raw).trim().toUpperCase();
+    if (!code) return null;
+    if (byIsoMap[code]) return code;
+    const aliased = CURRENCY_ALIASES[code];
+    if (aliased && byIsoMap[aliased]) return aliased;
+    const matches = [];
+    for (const c of Object.values(byIsoMap)) {
+      if (c && c.currency === code) matches.push(c.iso3);
+    }
+    if (!matches.length) return null;
+    if (aliased && matches.includes(aliased)) return aliased;
+    return matches[0];
+  }
+
   function isReliablePli(c) {
     return !!c
       && Number.isFinite(c.pli_us) && c.pli_us >= 0.05
@@ -191,17 +215,19 @@
 
   function readParams() {
     const q = new URLSearchParams(location.search);
+    if (q.get("type") === "gross" || q.get("type") === "net") el("itype").value = q.get("type");
+    const homeIso = resolveCountryCode(q.get("home"), byIso);
+    const destIso = resolveCountryCode(q.get("dest"), byIso);
+    if (homeIso) homePicker.setValue(homeIso, true);
+    if (destIso) destPicker.setValue(destIso, true);
     if (q.get("income")) {
       const n = parseIncome(q.get("income"));
       if (n > 0) {
-        const homeIso = (q.get("home") && byIso[q.get("home")]) ? q.get("home") : el("home").value;
-        const home = byIso[homeIso];
-        el("income").value = formatIncomeInput(n, home && home.currency, homeIso);
+        const iso = homeIso || el("home").value;
+        const home = byIso[iso];
+        el("income").value = formatIncomeInput(n, home && home.currency, iso);
       }
     }
-    if (q.get("type") === "gross" || q.get("type") === "net") el("itype").value = q.get("type");
-    if (q.get("home") && byIso[q.get("home")]) homePicker.setValue(q.get("home"), true);
-    if (q.get("dest") && byIso[q.get("dest")]) destPicker.setValue(q.get("dest"), true);
   }
 
   function writeParamsDebounced() {
@@ -213,9 +239,9 @@
     const q = new URLSearchParams();
     const incomeLocal = parseIncome(el("income").value);
     q.set("income", String(incomeLocal > 0 ? Math.round(incomeLocal) : ""));
-    q.set("home", el("home").value || "IND");
+    q.set("home", el("home").value || DEFAULT_HOME);
     q.set("type", el("itype").value || "net");
-    q.set("dest", el("dest").value || "USA");
+    q.set("dest", el("dest").value || DEFAULT_DEST);
     history.replaceState(null, "", location.pathname + "?" + q.toString());
     updateKingLink();
   }
@@ -375,9 +401,9 @@
     countriesSorted = DATA.countries.slice().sort((a, b) => a.name.localeCompare(b.name));
     homePicker = setupPicker("homeInput", "home", "homeList");
     destPicker = setupPicker("destInput", "dest", "destList");
-    if (byIso.IND) homePicker.setValue("IND", true);
+    if (byIso[DEFAULT_HOME]) homePicker.setValue(DEFAULT_HOME, true);
     else if (countriesSorted[0]) homePicker.setValue(countriesSorted[0].iso3, true);
-    if (byIso.USA) destPicker.setValue("USA", true);
+    if (byIso[DEFAULT_DEST]) destPicker.setValue(DEFAULT_DEST, true);
     else if (countriesSorted[1]) destPicker.setValue(countriesSorted[1].iso3, true);
 
     readParams();
@@ -401,7 +427,7 @@
 
     if (!el("income").value) {
       const home = byIso[el("home").value];
-      el("income").value = formatIncomeInput(800000, home && home.currency, home && home.iso3);
+      el("income").value = formatIncomeInput(DEFAULT_INCOME, home && home.currency, home && home.iso3);
     }
     render();
   }
