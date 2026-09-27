@@ -394,6 +394,7 @@
       );
       homeSumNet = escapeHtml(moneyOrDash(netForPpp, home.currency, home.iso3));
     } else {
+      // Net mode: entered figure is take-home — no home tax estimate (show 0).
       homeBlock = renderTaxSimBlock(
         { supported: false, notes: null },
         homeTaxCountry,
@@ -401,12 +402,13 @@
         home.iso3,
         `Home · ${home.name}`,
         {
-          tax: null,
+          tax: 0,
           net: netForPpp,
-          unavailable: "Home tax simulation off",
-          note: "Net mode: take-home is used as-is for PPP. Switch to Gross for home tax simulation.",
+          unavailable: "No home tax in Net mode",
+          note: "Net mode uses take-home as-is for PPP (est. tax 0). Switch to Gross for a home tax estimate.",
         }
       );
+      homeSumTax = escapeHtml(moneyOrDash(0, home.currency, home.iso3));
       homeSumNet = escapeHtml(moneyOrDash(netForPpp, home.currency, home.iso3));
     }
 
@@ -443,9 +445,14 @@
 
     const dedNote = itype === "gross"
       ? "Set a deduction per country below. Home applies to gross→net; destination applies to the PPP gross-up. Expand for the full calculation."
-      : "Destination deduction applies to the PPP gross-up. Switch to Gross to run a home tax estimate with its own deduction. Expand for the full calculation.";
+      : "Net mode: home est. tax is 0 (take-home as entered). Destination gross-up still uses the dest deduction. Panel stays collapsed — switch to Gross for a home tax estimate.";
 
-    const open = !!(global.PPP._taxOpen && global.PPP._taxOpen.both);
+    // Net: always collapsed (no home tax story). Gross: remember user toggle.
+    if (itype === "net") {
+      global.PPP._taxOpen = global.PPP._taxOpen || Object.create(null);
+      global.PPP._taxOpen.both = false;
+    }
+    const open = itype === "gross" && !!(global.PPP._taxOpen && global.PPP._taxOpen.both);
 
     const homeBase = incomeLocal || 0;
     const destBase = (destGross && destGross.gross) || 0;
