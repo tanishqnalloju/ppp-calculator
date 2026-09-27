@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem("ppp-calc-v2-theme");
+    if (t !== "light" && t !== "dark") {
+      t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme", t);
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+})();
+</script>
+<title>PPP Calculator — Same money. Different prices.</title>
+<meta name="description" content="PPP salary and purchasing power calculator. Convert annual income between countries using World Bank consumption PPP and official FX. See what the same lifestyle costs abroad." />
+<link rel="canonical" href="https://v2.ppp.tanishqnalloju.com/" />
+<meta name="robots" content="index,follow" />
+<meta property="og:title" content="PPP Calculator — Same money. Different prices." />
+<meta property="og:description" content="Convert annual income with purchasing-power parity. PPP equivalent, FX wire amount, and cost vs home — no scatter plots, no medians." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://v2.ppp.tanishqnalloju.com/" />
+<meta property="og:site_name" content="PPP Calculator" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="PPP Calculator — Same money. Different prices." />
+<meta name="twitter:description" content="PPP salary / purchasing power calculator. World Bank consumption PPP + official FX." />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PPP Calculator",
+  "url": "https://v2.ppp.tanishqnalloju.com/",
+  "description": "Simple purchasing-power parity salary calculator. Convert annual income between countries using World Bank consumption PPP and official exchange rates.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": {
+    "@type": "Person",
+    "name": "Tanishq Nalloju",
+    "url": "https://tanishqnalloju.com"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does PPP mean on this calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PPP here is World Bank private-consumption purchasing-power parity (indicator PA.NUS.PRVT.PP). It converts local currency into a common international unit so you can compare what income buys across countries. The PPP equivalent is the destination-currency amount that buys roughly the same consumption basket as your home income."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between PPP equivalent and FX / wire amount?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FX / wire amount is what you get if you simply convert cash at the official exchange rate (World Bank PA.NUS.FCRF). PPP equivalent adjusts for local prices: if the destination is cheaper, you need less local currency to live the same; if it is more expensive, you need more. They diverge when price levels differ from market FX."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where do the price levels come from?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Country price levels use World Bank WDI: consumption PPP divided by official FX, expressed relative to the United States (US = 100). Commodity strip prices are illustrative samples from The Economist Big Mac Index and Numbeo country averages — not a full CPI basket."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is net vs gross income adjusted for tax?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Net/gross is a label only. Enter the annual figure you want to compare; the calculator does not model tax systems."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="sr-only" href="#main">Skip to content</a>
+<div class="shell">
+  <header class="app-header">
+    <div class="brand">
+      <h1>PPP Calculator</h1>
+      <p class="tagline">Same money. Different prices.</p>
+    </div>
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle color theme">
+      <span class="theme-icon" aria-hidden="true">◐</span>
+      <span id="themeLabel">Dark</span>
+    </button>
+  </header>
+
+  <main id="main" class="stage">
+    <section class="rail" aria-label="Query">
+      <div class="rail-card">
+        <label class="field" for="income">
+          Annual income
+          <input type="text" id="income" inputmode="decimal" autocomplete="off" placeholder="e.g. 800,000" aria-describedby="currencyHint" />
+          <span class="hint" id="currencyHint">Home-currency annual figure.</span>
+        </label>
+
+        <label class="field" for="itype">
+          Type <span class="hint-inline">(label only — tax not modeled)</span>
+          <select id="itype">
+            <option value="net">Net</option>
+            <option value="gross">Gross</option>
+          </select>
+        </label>
+
+        <div class="country-pair">
+          <label class="field" for="homeInput">
+            Home country
+            <div class="picker-wrap">
+              <input type="text" id="homeInput" autocomplete="off" aria-autocomplete="list" aria-controls="homeList" aria-expanded="false" />
+              <input type="hidden" id="home" value="IND" />
+              <div class="picker-list" id="homeList" role="listbox"></div>
+            </div>
+          </label>
+
+          <button type="button" class="swap-btn" id="swapBtn" aria-label="Swap home and destination" title="Swap home ⇄ destination">⇄</button>
+
+          <label class="field" for="destInput">
+            Destination
+            <div class="picker-wrap">
+              <input type="text" id="destInput" autocomplete="off" aria-autocomplete="list" aria-controls="destList" aria-expanded="false" />
+              <input type="hidden" id="dest" value="USA" />
+              <div class="picker-list" id="destList" role="listbox"></div>
+            </div>
+          </label>
+        </div>
+
+        <div class="rail-actions">
+          <button type="button" class="btn secondary" id="copyLink">Copy link</button>
+        </div>
+
+        <div id="status" class="status hidden" role="status" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="canvas" aria-label="Answer" aria-live="polite">
+      <p class="lead" id="leadText">Enter an income to compare purchasing power.</p>
+
+      <div class="answer-primary">
+        <p class="label">PPP equivalent — to live the same</p>
+        <p class="ppp-value" id="pppValue">—</p>
+        <p class="sub" id="pppSub">Destination currency at local prices</p>
+      </div>
+
+      <div class="answer-secondary">
+        <div class="fx-block">
+          <p class="label">FX / wire — if you just convert cash</p>
+          <p class="fx-value" id="fxValue">—</p>
+          <p class="sub" id="fxSub">Official exchange rate</p>
+        </div>
+        <p class="delta-note hidden" id="deltaNote"></p>
+      </div>
+
+      <div class="evidence" role="group" aria-label="Price evidence">
+        <div class="chip" id="costFact">
+          <strong id="costText">Cost vs home: —</strong>
+          <span class="muted" id="costSub"></span>
+        </div>
+        <div class="chip" id="pliFact">
+          <strong id="pliText">Price level vs US: —</strong>
+          <span class="muted">(US = 100)</span>
+        </div>
+      </div>
+
+      <section class="commodities" aria-labelledby="commHeading">
+        <h2 id="commHeading">Local prices — a few basics</h2>
+        <p class="intro" id="commIntro">Illustrative home vs destination prices. Not a full CPI basket. Dated in data.</p>
+        <div class="strip" id="commStrip"></div>
+        <div class="comm-table-wrap" id="commTableWrap"></div>
+      </section>
+    </section>
+  </main>
+
+  <details class="about" id="about">
+    <summary>About the numbers</summary>
+    <div class="about-body">
+      <h3>Formulas</h3>
+      <p>Given annual income in home currency (<code>incomeLocal</code>):</p>
+      <ul>
+        <li><code>your_ppp_income = incomeLocal / home.ppp</code></li>
+        <li><code>equiv (PPP) = your_ppp_income × dest.ppp</code> — destination currency to live the same</li>
+        <li><code>fxLocal = incomeLocal × (dest.fx / home.fx)</code> — wire / market convert</li>
+        <li><code>costPct = (dest.pli_us / home.pli_us − 1) × 100</code></li>
+        <li>Price level display = <code>round(dest.pli_us × 100)</code> with US = 100</li>
+      </ul>
+
+      <h3>Country data</h3>
+      <p>
+        World Bank WDI: private-consumption PPP (<code>PA.NUS.PRVT.PP</code>) and official FX
+        (<code>PA.NUS.FCRF</code>). Price level index <code>pli_us = ppp / fx</code> relative to the United States.
+        Countries with unreliable PLI (below 0.05 or non-finite) are skipped or warned — never Infinity/NaN.
+      </p>
+
+      <h3>Commodities</h3>
+      <p>
+        Sample prices from The Economist Big Mac Index (open GitHub CSV) and Numbeo country averages.
+        Gaps are left null. Refresh with <code>scripts/fetch_commodities.py</code>.
+      </p>
+
+      <h3>FAQ</h3>
+      <details open>
+        <summary>What does PPP mean here?</summary>
+        <p>
+          Private-consumption purchasing-power parity from the World Bank (PA.NUS.PRVT.PP).
+          It converts your home income into an international unit, then into destination currency
+          at destination prices — the amount that roughly buys the same basket.
+        </p>
+      </details>
+      <details>
+        <summary>PPP equivalent vs FX / wire amount?</summary>
+        <p>
+          FX is a bank-style convert at the official rate. PPP adjusts for how expensive the destination
+          is. Cheaper destinations show a lower PPP equivalent than the wire; expensive ones show higher.
+        </p>
+      </details>
+      <details>
+        <summary>Where do sources come from?</summary>
+        <p>
+          Country PPP/FX: World Bank WDI. Commodities: Economist Big Mac Index + Numbeo (illustrative).
+          Net/gross is a label only — taxes are not modeled.
+        </p>
+      </details>
+      <details>
+        <summary>What this is not</summary>
+        <p>
+          Not a tax calculator. Not a median / local-class lab.
+          For × median and relative class, see KingIndex.
+        </p>
+      </details>
+    </div>
+  </details>
+
+  <footer class="app-footer">
+    <span>PPP Calculator · Tanishq Nalloju</span>
+    <a id="kingLink" href="https://kingindex.tanishqnalloju.com">For local class / × median → KingIndex</a>
+    <a href="https://github.com/tanishqnalloju/ppp-calculator">Source</a>
+    <a href="https://ppp.tanishqnalloju.com/">v1</a>
+  </footer>
+</div>
+
+<script src="js/compute.js" defer></script>
+<script src="js/theme.js" defer></script>
+<script src="js/url.js" defer></script>
+<script src="js/pickers.js" defer></script>
+<script src="js/render.js" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>

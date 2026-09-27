@@ -1,0 +1,207 @@
+/*
+ * PPP Calculator v2 — token sketch ONLY
+ * Light + dark semantic variables. Not a full stylesheet.
+ * Prefer Instrument Sans + Newsreader (continuity with v1).
+ * Import/copy into v2/tokens.css when implementation is approved.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* —— Primitives: neutrals (warm paper) —— */
+  --neutral-0: #ffffff;
+  --neutral-25: #fbfaf7;
+  --neutral-50: #f7f5f0;
+  --neutral-100: #efebe3;
+  --neutral-200: #ddd6c8;
+  --neutral-300: #c4b9a6;
+  --neutral-500: #6b6458;
+  --neutral-700: #3f3a33;
+  --neutral-900: #1c1915;
+  --neutral-950: #12100e;
+
+  /* —— Primitives: accent (forest) —— */
+  --green-50: #e4f0ea;
+  --green-100: #c5e0d2;
+  --green-600: #1a5c45;
+  --green-700: #134536;
+  --green-800: #0f362a;
+
+  /* —— Primitives: warn / danger —— */
+  --amber-100: #f7efd8;
+  --amber-700: #8a5a12;
+  --red-100: #f5e0e0;
+  --red-700: #9b2c2c;
+
+  /* —— Typography families —— */
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* —— Type scale (rem @ 16px root) —— */
+  --text-xs: 0.75rem;     /* 12 */
+  --text-sm: 0.875rem;    /* 14 */
+  --text-base: 1rem;      /* 16 */
+  --text-lg: 1.125rem;    /* 18 */
+  --text-xl: 1.25rem;     /* 20 */
+  --text-2xl: 1.5rem;     /* 24 */
+  --text-3xl: 1.875rem;   /* 30 */
+  --text-4xl: 2.25rem;    /* 36 */
+  --text-display: clamp(2rem, 4.5vw, 2.75rem); /* PPP hero */
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-normal: 1.55;
+  --tracking-label: 0.04em;
+  --tracking-tight: -0.02em;
+
+  /* —— Space scale (4px grid) —— */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* —— Radii —— */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* —— Elevation —— */
+  --shadow-sm: 0 1px 2px rgba(28, 25, 21, 0.04);
+  --shadow-md: 0 1px 2px rgba(28, 25, 21, 0.04), 0 4px 16px rgba(28, 25, 21, 0.05);
+
+  /* —— Motion —— */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration-normal: 220ms;
+
+  /* —— Layout —— */
+  --content-narrow: 42rem;
+  --content-wide: 60rem;
+  --rail-width: 20rem;
+  --focus-ring: 2px solid var(--accent);
+
+  /* —— Semantic (light) —— */
+  --bg: var(--neutral-50);
+  --bg-accent: var(--neutral-100);
+  --surface: var(--neutral-0);
+  --surface-soft: #f3f0ea;
+  --surface-rail: var(--neutral-0);
+  --surface-canvas: var(--neutral-25);
+  --border: var(--neutral-200);
+  --border-strong: var(--neutral-300);
+  --text: var(--neutral-900);
+  --text-secondary: var(--neutral-500);
+  --text-inverse: var(--neutral-0);
+  --accent: var(--green-600);
+  --accent-soft: var(--green-50);
+  --accent-hover: var(--green-700);
+  --warn: var(--amber-700);
+  --warn-bg: var(--amber-100);
+  --danger: var(--red-700);
+  --danger-bg: var(--red-100);
+  --shadow: var(--shadow-md);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --neutral-0: #1c2018;
+  --neutral-25: #181b14;
+  --neutral-50: #12140f;
+  --neutral-100: #1a1d16;
+  --neutral-200: #343a2e;
+  --neutral-300: #4a5240;
+  --neutral-500: #9a9386;
+  --neutral-700: #c9c2b4;
+  --neutral-900: #ece8df;
+  --neutral-950: #f7f5f0;
+
+  --green-50: #1e332a;
+  --green-100: #274a3a;
+  --green-600: #5fbf9a;
+  --green-700: #7ad4b0;
+  --green-800: #9ee0c4;
+
+  --amber-100: #2e2818;
+  --amber-700: #e0b45a;
+  --red-100: #2e1a1a;
+  --red-700: #e07a7a;
+
+  --bg: var(--neutral-50);
+  --bg-accent: var(--neutral-100);
+  --surface: var(--neutral-0);
+  --surface-soft: #242820;
+  --surface-rail: var(--neutral-0);
+  --surface-canvas: var(--neutral-25);
+  --border: var(--neutral-200);
+  --border-strong: var(--neutral-300);
+  --text: var(--neutral-900);
+  --text-secondary: var(--neutral-500);
+  --text-inverse: #12140f;
+  --accent: var(--green-600);
+  --accent-soft: var(--green-50);
+  --accent-hover: var(--green-700);
+  --warn: var(--amber-700);
+  --warn-bg: var(--amber-100);
+  --danger: var(--red-700);
+  --danger-bg: var(--red-100);
+  --shadow: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+}
+
+/* System preference fallback when data-theme unset */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]):not([data-theme="dark"]) {
+    color-scheme: dark;
+    --neutral-0: #1c2018;
+    --neutral-25: #181b14;
+    --neutral-50: #12140f;
+    --neutral-100: #1a1d16;
+    --neutral-200: #343a2e;
+    --neutral-300: #4a5240;
+    --neutral-500: #9a9386;
+    --neutral-700: #c9c2b4;
+    --neutral-900: #ece8df;
+    --green-50: #1e332a;
+    --green-600: #5fbf9a;
+    --green-700: #7ad4b0;
+    --amber-100: #2e2818;
+    --amber-700: #e0b45a;
+    --red-100: #2e1a1a;
+    --red-700: #e07a7a;
+    --bg: #12140f;
+    --bg-accent: #1a1d16;
+    --surface: #1c2018;
+    --surface-soft: #242820;
+    --surface-rail: #1c2018;
+    --surface-canvas: #181b14;
+    --border: #343a2e;
+    --border-strong: #4a5240;
+    --text: #ece8df;
+    --text-secondary: #9a9386;
+    --accent: #5fbf9a;
+    --accent-soft: #1e332a;
+    --accent-hover: #7ad4b0;
+    --warn: #e0b45a;
+    --warn-bg: #2e2818;
+    --danger: #e07a7a;
+    --danger-bg: #2e1a1a;
+    --shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0.01ms;
+    --duration-normal: 0.01ms;
+  }
+}
