@@ -462,11 +462,11 @@
     const focusPos = (active && active.selectionStart != null) ? active.selectionStart : null;
 
     if (dedMount) {
+      // Remount only when structure changes — not on every typed digit
       const fp = [
         home.iso3, dest.iso3, itype,
         state.deduction_home, state.deduction_dest,
         state.custom_home_unit, state.custom_dest_unit,
-        state.custom_home, state.custom_dest,
       ].join("|");
       if (dedMount.dataset.fp !== fp) {
         dedMount.dataset.fp = fp;
