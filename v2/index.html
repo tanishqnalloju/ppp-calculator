@@ -120,21 +120,24 @@
           </select>
         </label>
 
-        <label class="field" for="deductionMode">
-          Deduction assumption <span class="hint-inline">(both countries)</span>
-          <select id="deductionMode">
-            <option value="none">None</option>
-            <option value="standard" selected>Standard allowance</option>
-            <option value="typical" id="deductionTypicalOpt">Typical extra</option>
-            <option value="custom">Custom %</option>
-          </select>
-        </label>
+        <div id="deductionFields" class="deduction-fields hidden">
+          <label class="field" for="deductionMode">
+            Deduction assumption <span class="hint-inline">(Gross only)</span>
+            <select id="deductionMode">
+              <option value="none">None</option>
+              <option value="standard" selected>Standard allowance</option>
+              <option value="typical" id="deductionTypicalOpt">Typical extra</option>
+              <option value="custom">Custom %</option>
+            </select>
+            <span class="hint">Applies to home gross→net and destination gross-up.</span>
+          </label>
 
-        <label class="field hidden" id="customPctWrap" for="deductionPct">
-          Custom deduction % of gross
-          <input type="number" id="deductionPct" min="0" max="50" step="1" value="10" inputmode="decimal" />
-          <span class="hint">Clamped 0–50%. Applied to both home and destination models.</span>
-        </label>
+          <label class="field hidden" id="customPctWrap" for="deductionPct">
+            Custom deduction % of gross
+            <input type="number" id="deductionPct" min="0" max="50" step="1" value="10" inputmode="decimal" />
+            <span class="hint">Clamped 0–50%.</span>
+          </label>
+        </div>
 
         <div class="country-pair">
           <label class="field" for="homeInput">

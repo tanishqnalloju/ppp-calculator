@@ -368,6 +368,59 @@ select:hover { border-color: var(--border-strong); }
   font-size: var(--text-xs);
 }
 
+
+.deduction-fields {
+  display: grid;
+  gap: var(--space-3);
+}
+.tax-model-tag {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.tax-sim {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+.tax-sim-label {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+.tax-slices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tax-slices li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  margin: var(--space-1) 0;
+  color: var(--text);
+}
+.tax-slices li b { font-weight: 600; text-align: right; }
+[data-theme="dark"] .tax-model-tag {
+  color: var(--accent-on-answer);
+}
+[data-theme="dark"] .tax-sim {
+  border-top-color: var(--border-answer);
+}
+[data-theme="dark"] .tax-sim-label {
+  color: var(--text-muted-on-answer);
+}
+[data-theme="dark"] .tax-slices li {
+  color: var(--text-on-answer);
+}
+
 /* —— Illustrative tax panel —— */
 .tax-panel {
   margin-bottom: var(--space-6);

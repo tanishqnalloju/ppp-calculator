@@ -84,9 +84,12 @@
     return Math.max(0, g - ded);
   }
 
-  function pitOnTaxable(taxable, brackets) {
+  function pitBreakdown(taxable, brackets) {
     const t = Math.max(0, Number(taxable) || 0);
-    if (!Array.isArray(brackets) || !brackets.length) return 0;
+    const slices = [];
+    if (!Array.isArray(brackets) || !brackets.length) {
+      return { pit: 0, slices };
+    }
     let remaining = t;
     let prev = 0;
     let tax = 0;
@@ -94,22 +97,65 @@
       const rate = Number(b.rate) || 0;
       const up = b.up_to;
       if (up == null || !Number.isFinite(up)) {
-        tax += remaining * rate;
-        remaining = 0;
+        if (remaining > 0) {
+          const sliceTax = remaining * rate;
+          slices.push({ from: prev, to: null, rate, amount: remaining, tax: sliceTax });
+          tax += sliceTax;
+          remaining = 0;
+        }
         break;
       }
       const width = Math.max(0, up - prev);
       const slice = Math.min(remaining, width);
-      tax += slice * rate;
-      remaining -= slice;
+      if (slice > 0) {
+        const sliceTax = slice * rate;
+        slices.push({ from: prev, to: up, rate, amount: slice, tax: sliceTax });
+        tax += sliceTax;
+        remaining -= slice;
+      }
       prev = up;
       if (remaining <= 0) break;
     }
     if (remaining > 0) {
       const last = brackets[brackets.length - 1];
-      tax += remaining * (Number(last && last.rate) || 0);
+      const rate = Number(last && last.rate) || 0;
+      const sliceTax = remaining * rate;
+      slices.push({ from: prev, to: null, rate, amount: remaining, tax: sliceTax });
+      tax += sliceTax;
     }
-    return tax;
+    return { pit: tax, slices };
+  }
+
+  function pitOnTaxable(taxable, brackets) {
+    return pitBreakdown(taxable, brackets).pit;
+  }
+
+  function deductionDetail(gross, country, deductionMode, customPct) {
+    const g = Math.max(0, Number(gross) || 0);
+    if (!country) return { amount: 0, label: "None", mode: deductionMode || "standard" };
+    const mode = deductionMode || "standard";
+    if (mode === "none") return { amount: 0, label: "None", mode };
+    if (mode === "custom") {
+      const pct = clampCustomPct(customPct);
+      return { amount: g * (pct / 100), label: `Custom ${pct}% of gross`, mode, pct };
+    }
+    if (mode === "typical") {
+      const typical = resolveTypicalDeduction(g, country);
+      if (typical != null) {
+        const te = country.typical_extra_deduction;
+        return { amount: typical, label: (te && te.label) || "Typical extra", mode };
+      }
+      if (country.allowance_in_brackets) {
+        return { amount: 0, label: "Typical → allowance already in brackets", mode };
+      }
+      const std = Math.max(0, Number(country.standard_deduction) || 0);
+      return { amount: std, label: "Typical → standard allowance", mode };
+    }
+    if (country.allowance_in_brackets) {
+      return { amount: 0, label: "Standard (0% band in brackets)", mode };
+    }
+    const std = Math.max(0, Number(country.standard_deduction) || 0);
+    return { amount: std, label: "Standard allowance", mode };
   }
 
   function applyEmployeeSs(gross, employeeSs) {
@@ -145,10 +191,14 @@
       return emptyResult(g, {
         supported: false,
         notes: (country && (country.notes || country.reason)) || "Tax model unavailable",
+        deduction: { amount: 0, label: "—", mode: opts.deductionMode || "standard" },
+        slices: [],
+        taxYear: country && country.tax_year || null,
+        model: country && country.model || null,
       });
     }
 
-    if (country.system === "none") {
+    if (country.system === "none" || country.model === "none") {
       return {
         gross: g,
         taxable: 0,
@@ -159,13 +209,19 @@
         effectiveRate: 0,
         supported: true,
         notes: country.notes || null,
+        deduction: { amount: 0, label: "No PIT", mode: opts.deductionMode || "standard" },
+        slices: [],
+        taxYear: country.tax_year || null,
+        model: country.model || "none",
       };
     }
 
     const mode = opts.deductionMode || "standard";
     const customPct = opts.customPct;
+    const deduction = deductionDetail(g, country, mode, customPct);
     const taxable = taxableIncome(g, country, mode, customPct);
-    const pit = pitOnTaxable(taxable, country.brackets);
+    const br = pitBreakdown(taxable, country.brackets);
+    const pit = br.pit;
     const ss = applyEmployeeSs(g, country.employee_ss);
     const totalTax = pit + ss;
     const net = g - totalTax;
@@ -181,6 +237,11 @@
       effectiveRate,
       supported: true,
       notes: country.notes || null,
+      deduction,
+      slices: br.slices,
+      taxYear: country.tax_year || null,
+      model: country.model || null,
+      sourceName: country.source_name || null,
     };
   }
 
@@ -248,6 +309,8 @@
       isSupported,
       taxableIncome,
       pitOnTaxable,
+      pitBreakdown,
+      deductionDetail,
       applyEmployeeSs,
       grossToNet,
       netToGross,

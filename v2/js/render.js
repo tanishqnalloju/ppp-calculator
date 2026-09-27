@@ -135,11 +135,72 @@
     return `${(rate * 100).toFixed(1)}%`;
   }
 
+  function fmtBand(slice, currency, iso3) {
+    const from = global.PPP.fmtMoney(slice.from, currency, iso3);
+    const to = slice.to == null ? "∞" : global.PPP.fmtMoney(slice.to, currency, iso3);
+    const rate = `${(slice.rate * 100).toFixed(slice.rate && slice.rate < 0.1 ? 2 : 0)}%`;
+    return `${from}–${to} @ ${rate}`;
+  }
+
+  function renderTaxSim(result, country, currency, iso3, title) {
+    const escapeHtml = global.PPP.escapeHtml;
+    if (!result || !result.supported) {
+      return (
+        `<div class="tax-col">` +
+        `<p class="tax-col-title">${escapeHtml(title)}</p>` +
+        `<p class="tax-unavailable">Model unavailable</p>` +
+        (result && result.notes ? `<p class="tax-note">${escapeHtml(result.notes)}</p>` : "") +
+        `</div>`
+      );
+    }
+
+    const ded = result.deduction || {};
+    const year = result.taxYear ? ` · ${escapeHtml(result.taxYear)}` : "";
+    const model = result.model ? escapeHtml(result.model) : "PIT";
+    let slicesHtml = "";
+    if (result.slices && result.slices.length) {
+      slicesHtml =
+        `<div class="tax-sim">` +
+        `<p class="tax-sim-label">Bracket simulation</p>` +
+        `<ul class="tax-slices">` +
+        result.slices.map((s) =>
+          `<li><span>${escapeHtml(fmtBand(s, currency, iso3))}</span>` +
+          `<b>${escapeHtml(global.PPP.fmtMoney(s.tax, currency, iso3))}</b></li>`
+        ).join("") +
+        `</ul></div>`;
+    } else if (result.model === "none") {
+      slicesHtml = `<p class="tax-note">No personal income tax in this model.</p>`;
+    }
+
+    return (
+      `<div class="tax-col">` +
+      `<p class="tax-col-title">${escapeHtml(title)}${year}</p>` +
+      `<p class="tax-model-tag">${model}</p>` +
+      `<div class="tax-row"><span>Gross</span><b>${escapeHtml(global.PPP.fmtMoney(result.gross, currency, iso3))}</b></div>` +
+      `<div class="tax-row"><span>Deduction</span><b>${escapeHtml(global.PPP.fmtMoney(ded.amount || 0, currency, iso3))}</b></div>` +
+      (ded.label ? `<p class="tax-note">${escapeHtml(ded.label)}</p>` : "") +
+      `<div class="tax-row"><span>Taxable</span><b>${escapeHtml(global.PPP.fmtMoney(result.taxable, currency, iso3))}</b></div>` +
+      `<div class="tax-row"><span>Est. PIT</span><b>${escapeHtml(global.PPP.fmtMoney(result.pit, currency, iso3))}</b></div>` +
+      (result.ss > 0
+        ? `<div class="tax-row"><span>Est. employee SS</span><b>${escapeHtml(global.PPP.fmtMoney(result.ss, currency, iso3))}</b></div>`
+        : "") +
+      `<div class="tax-row"><span>Total tax</span><b>${escapeHtml(global.PPP.fmtMoney(result.totalTax, currency, iso3))}</b></div>` +
+      `<div class="tax-row"><span>Effective rate</span><b>${escapeHtml(fmtPct(result.effectiveRate))}</b></div>` +
+      `<div class="tax-row"><span>Est. net</span><b>${escapeHtml(global.PPP.fmtMoney(result.net, currency, iso3))}</b></div>` +
+      slicesHtml +
+      (result.notes ? `<p class="tax-note" title="${escapeHtml(result.notes)}">${escapeHtml(result.notes)}</p>` : "") +
+      `</div>`
+    );
+  }
+
   function renderTaxPanel(ctx) {
     const panel = el("taxPanel");
     if (!panel) return;
 
-    const { home, dest, itype, incomeLocal, netForPpp, homeTax, destGross, homeSupported, destSupported, homeTaxCountry, destTaxCountry, taxUnavailable } = ctx;
+    const {
+      home, dest, itype, incomeLocal, netForPpp, homeTax, destGross,
+      homeSupported, destSupported, homeTaxCountry, destTaxCountry, taxUnavailable,
+    } = ctx;
     const escapeHtml = global.PPP.escapeHtml;
 
     if (!(incomeLocal > 0)) {
@@ -154,8 +215,8 @@
       warnings.push(
         `Home (${escapeHtml(home.iso3)}): tax estimate unavailable — PPP uses the entered figure as take-home for comparison.`
       );
-    } else if (!homeSupported && homeTaxCountry && homeTaxCountry.reason) {
-      warnings.push(`Home (${escapeHtml(home.iso3)}): ${escapeHtml(homeTaxCountry.reason)}`);
+    } else if (!homeSupported && homeTaxCountry && (homeTaxCountry.reason || homeTaxCountry.notes)) {
+      warnings.push(`Home (${escapeHtml(home.iso3)}): ${escapeHtml(homeTaxCountry.reason || homeTaxCountry.notes)}`);
     }
     if (!destSupported && destTaxCountry) {
       const reason = destTaxCountry.reason || destTaxCountry.notes || "No illustrative PIT model.";
@@ -164,14 +225,7 @@
 
     let homeBlock = "";
     if (itype === "gross" && homeSupported && homeTax && homeTax.supported) {
-      homeBlock =
-        `<div class="tax-col">` +
-        `<p class="tax-col-title">Home · ${escapeHtml(home.name)}</p>` +
-        `<div class="tax-row"><span>Est. PIT + SS</span><b>${escapeHtml(global.PPP.fmtMoney(homeTax.totalTax, home.currency, home.iso3))}</b></div>` +
-        `<div class="tax-row"><span>Effective rate</span><b>${escapeHtml(fmtPct(homeTax.effectiveRate))}</b></div>` +
-        `<div class="tax-row"><span>Est. net (used for PPP)</span><b>${escapeHtml(global.PPP.fmtMoney(homeTax.net, home.currency, home.iso3))}</b></div>` +
-        (homeTax.notes ? `<p class="tax-note" title="${escapeHtml(homeTax.notes)}">${escapeHtml(homeTax.notes)}</p>` : "") +
-        `</div>`;
+      homeBlock = renderTaxSim(homeTax, homeTaxCountry, home.currency, home.iso3, `Home · ${home.name}`);
     } else if (itype === "gross" && !homeSupported) {
       homeBlock =
         `<div class="tax-col">` +
@@ -181,25 +235,23 @@
         `<p class="tax-note">Entered gross treated as take-home for PPP only (no brackets applied).</p>` +
         `</div>`;
     } else {
-      // net mode — PPP uses entered amount; still show brief home note if useful
       homeBlock =
         `<div class="tax-col">` +
         `<p class="tax-col-title">Home · ${escapeHtml(home.name)}</p>` +
         `<div class="tax-row"><span>Take-home used for PPP</span><b>${escapeHtml(global.PPP.fmtMoney(netForPpp, home.currency, home.iso3))}</b></div>` +
-        `<p class="tax-note">Net mode: entered amount is take-home; no home gross→net conversion.</p>` +
+        `<p class="tax-note">Net mode: no home tax simulation. Switch to Gross to model deductions and brackets.</p>` +
         `</div>`;
     }
 
     let destBlock = "";
     if (destSupported && destGross && destGross.supported && destGross.gross != null) {
-      destBlock =
-        `<div class="tax-col">` +
-        `<p class="tax-col-title">Destination · ${escapeHtml(dest.name)}</p>` +
-        `<div class="tax-row"><span>PPP-equivalent net</span><b>${escapeHtml(global.PPP.fmtMoney(ctx.pppEquiv, dest.currency, dest.iso3))}</b></div>` +
-        `<div class="tax-row"><span>Est. gross needed</span><b>${escapeHtml(global.PPP.fmtMoney(destGross.gross, dest.currency, dest.iso3))}</b></div>` +
-        `<div class="tax-row"><span>Est. effective rate</span><b>${escapeHtml(fmtPct(destGross.effectiveRate))}</b></div>` +
-        (destGross.notes ? `<p class="tax-note" title="${escapeHtml(destGross.notes)}">${escapeHtml(destGross.notes)}</p>` : "") +
-        `</div>`;
+      destBlock = renderTaxSim(
+        destGross,
+        destTaxCountry,
+        dest.currency,
+        dest.iso3,
+        `Destination · ${dest.name} (gross-up)`
+      );
     } else {
       destBlock =
         `<div class="tax-col">` +
@@ -213,8 +265,13 @@
       ? `<ul class="tax-warnings">${warnings.map((w) => `<li>${w}</li>`).join("")}</ul>`
       : "";
 
+    const dedNote = itype === "gross"
+      ? "Deduction assumption applies to Gross home conversion and destination gross-up."
+      : "Deduction controls are hidden in Net mode; destination gross-up uses the standard allowance only.";
+
     panel.innerHTML =
       `<h2 class="tax-heading">Illustrative tax estimates</h2>` +
+      `<p class="tax-disclaimer">${dedNote}</p>` +
       `<div class="tax-grid">${homeBlock}${destBlock}</div>` +
       warnHtml +
       `<p class="tax-disclaimer">Illustrative national/federal PIT model only. Local/state taxes and many social contributions are often excluded. <strong>Not tax advice</strong> — not personalized. Sources: PwC Worldwide Tax Summaries (see About / <code>data/taxes.json</code>).</p>`;
@@ -224,10 +281,24 @@
     const modeEl = el("deductionMode");
     const customWrap = el("customPctWrap");
     const typicalOpt = el("deductionTypicalOpt");
+    const dedWrap = el("deductionFields");
+    const itype = (state && state.type) || "net";
+    const grossMode = itype === "gross";
+
+    if (dedWrap) {
+      if (grossMode) dedWrap.classList.remove("hidden");
+      else dedWrap.classList.add("hidden");
+    }
     if (!modeEl) return;
 
+    // Deduction controls only apply in Gross mode (home conversion + dest gross-up).
+    modeEl.disabled = !grossMode;
+    const pctEl = el("deductionPct");
+    if (pctEl) pctEl.disabled = !grossMode;
+
     const hasTypical =
-      (global.PPP.tax && (global.PPP.tax.hasTypicalExtra(homeIso) || global.PPP.tax.hasTypicalExtra(destIso)));
+      grossMode && global.PPP.tax &&
+      (global.PPP.tax.hasTypicalExtra(homeIso) || global.PPP.tax.hasTypicalExtra(destIso));
     if (typicalOpt) {
       typicalOpt.disabled = !hasTypical;
       typicalOpt.hidden = !hasTypical;
@@ -236,7 +307,7 @@
       }
     }
     if (customWrap) {
-      if (modeEl.value === "custom") customWrap.classList.remove("hidden");
+      if (grossMode && modeEl.value === "custom") customWrap.classList.remove("hidden");
       else customWrap.classList.add("hidden");
     }
   }
@@ -312,9 +383,12 @@
 
     const r = global.PPP.compute(home, dest, netForPpp);
 
+    // Deduction tweaks only in Gross mode. Net mode dest gross-up uses standard.
+    const destOpts = itype === "gross" ? opts : { deductionMode: "standard", customPct: 0 };
+
     let destGross = null;
     if (r.reliable && r.equiv != null && destSupported && taxApi) {
-      destGross = taxApi.netToGross(r.equiv, destTaxCountry, opts);
+      destGross = taxApi.netToGross(r.equiv, destTaxCountry, destOpts);
     }
 
     if (!r.reliable) {
