@@ -180,8 +180,23 @@
 
     const ded = result.deduction || {};
     const model = result.model ? escapeHtml(result.model) : "PIT";
+    // When a rebate fully zeros PIT (e.g. India §87A ≤ ₹12L), skip the
+    // tax-then-rebate theater — effective liability is simply nil.
+    const rebateZeros = !!(result.rebate > 0 && Number(result.pit) <= 0.5);
+    const rebateCfg = country && country.rebate;
+    const nilCap = rebateCfg && rebateCfg.max_total_income != null
+      ? Number(rebateCfg.max_total_income)
+      : null;
+
     let slicesHtml = "";
-    if (result.slices && result.slices.length) {
+    if (rebateZeros) {
+      const capStr = nilCap != null
+        ? escapeHtml(global.PPP.fmtMoney(nilCap, currency, iso3))
+        : "the rebate threshold";
+      const label = escapeHtml(result.rebateLabel || "Rebate");
+      slicesHtml =
+        `<p class="tax-note tax-nil">Nil PIT — ${label} zeros tax when total income is ≤ ${capStr}. No bracket tax is due in this range.</p>`;
+    } else if (result.slices && result.slices.length) {
       slicesHtml =
         `<div class="tax-sim">` +
         `<p class="tax-sim-label">Bracket simulation</p>` +
@@ -195,7 +210,7 @@
       slicesHtml = `<p class="tax-note">No personal income tax in this model.</p>`;
     }
 
-    const rebateRow = result.rebate > 0
+    const rebateRow = (!rebateZeros && result.rebate > 0)
       ? `<div class="tax-row"><span>${escapeHtml(result.rebateLabel || "Rebate")}</span>` +
         `<b>−${escapeHtml(global.PPP.fmtMoney(result.rebate, currency, iso3))}</b></div>`
       : "";
@@ -203,7 +218,7 @@
       ? `<div class="tax-row"><span>${escapeHtml(result.cessLabel || "Cess")}</span>` +
         `<b>${escapeHtml(global.PPP.fmtMoney(result.cess, currency, iso3))}</b></div>`
       : "";
-    const pitBefore = (result.pitBeforeRebate != null && result.rebate > 0)
+    const pitBefore = (!rebateZeros && result.pitBeforeRebate != null && result.rebate > 0)
       ? `<div class="tax-row"><span>PIT before rebate</span>` +
         `<b>${escapeHtml(global.PPP.fmtMoney(result.pitBeforeRebate, currency, iso3))}</b></div>`
       : "";

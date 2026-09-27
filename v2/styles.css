@@ -970,3 +970,5 @@ details.tax-col[open] .tax-chevron {
 [data-theme="dark"] .comm-table .muted {
   color: var(--text-muted-on-answer);
 }
+
+.tax-nil { font-weight: 600; }

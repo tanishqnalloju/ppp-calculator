@@ -46,7 +46,7 @@
       "allowance_in_brackets": false,
       "typical_extra_deduction": null,
       "employee_ss": null,
-      "notes": "Default new regime (APTR) for FY 2025/26+. Standard deduction \u20b975,000 assumes salaried/pension income. Section 87A rebate (up to \u20b960,000) zeros PIT when total income \u2264 \u20b912,00,000 (\u2248 \u20b912.75L gross salary with SD). Marginal relief above \u20b912L, surcharge, and old regime not modeled. Source: PwC WTS India (reviewed May 2026) / Budget 2025.",
+      "notes": "Default new regime (APTR) FY 2025/26+: effective nil PIT when total income \u2264 \u20b912,00,000 (Section 87A rebate up to \u20b960,000; \u2248 \u20b912.75L gross salary with \u20b975,000 standard deduction). Above that, progressive slabs apply plus 4% health & education cess. Marginal relief just over \u20b912L, surcharge, and old regime not modeled. Source: PwC WTS India (reviewed May 2026) / Budget 2025.",
       "source_url": "https://taxsummaries.pwc.com/india/individual/taxes-on-personal-income",
       "model": "progressive",
       "rebate": {
