@@ -118,7 +118,7 @@ Also: URL `replaceState` keeps four params; KingIndex link forwards them; theme 
 | Shared theme key fights v1 preference | Prefer `ppp-calc-v2-theme` unless you want sync |
 | Dual public dirs confuse deploy | Strict script names `*:v2`; README note after ship |
 | Commodity table a11y on mobile | Use strip below breakpoint; table only when width allows |
-| Domain / DNS lag | Ship workers.dev URL first; attach custom domain when DNS ready |
+| Domain / DNS lag | Serve only custom domain `v2.ppp.tanishqnalloju.com` (`workers_dev` / `preview_urls` false); wait for DNS rather than advertising workers.dev |
 | Accidental v1 file edit | Pre-commit check / review diff against allowlist |
 
 ---

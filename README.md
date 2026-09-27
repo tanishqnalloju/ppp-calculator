@@ -6,6 +6,7 @@ A simple, curated purchasing-power parity (PPP) salary calculator.
 Convert annual income between countries using World Bank consumption PPP and official FX.
 
 - **Live:** https://ppp.tanishqnalloju.com  
+- **Live (v2):** https://v2.ppp.tanishqnalloju.com  
 - **Repo:** https://github.com/tanishqnalloju/ppp-calculator  
 - **Related (local class / × median):** [KingIndex](https://kingindex.tanishqnalloju.com) — separate product.
 

@@ -4,7 +4,8 @@
   "name": "ppp-calculator-v2",
   "main": "src/worker.js",
   "compatibility_date": "2026-09-01",
-  "workers_dev": true,
+  "workers_dev": false,
+  "preview_urls": false,
   "routes": [
     { "pattern": "v2.ppp.tanishqnalloju.com", "custom_domain": true }
   ],
