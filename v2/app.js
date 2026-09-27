@@ -25,6 +25,24 @@
     };
   }
 
+  function syncTypeToggle(type) {
+    const t = type === "gross" ? "gross" : "net";
+    const hidden = el("itype");
+    if (hidden) hidden.value = t;
+    const grossBtn = el("typeGross");
+    const netBtn = el("typeNet");
+    if (grossBtn) {
+      const on = t === "gross";
+      grossBtn.classList.toggle("is-active", on);
+      grossBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    }
+    if (netBtn) {
+      const on = t === "net";
+      netBtn.classList.toggle("is-active", on);
+      netBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    }
+  }
+
   function writeUrlDebounced() {
     clearTimeout(urlTimer);
     urlTimer = setTimeout(() => PPP.url.writeParams(getState()), 350);
@@ -135,7 +153,7 @@
       else if (countriesSorted[1]) destPicker.setValue(countriesSorted[1].iso3, true);
 
       PPP.url.readParams(byIso, {
-        setType: (t) => { el("itype").value = t; },
+        setType: (t) => { syncTypeToggle(t); },
         setHome: (iso, silent) => homePicker.setValue(iso, silent),
         setDest: (iso, silent) => destPicker.setValue(iso, silent),
         setIncome: (v) => { el("income").value = v; },
@@ -146,7 +164,17 @@
 
       el("income").addEventListener("input", doRender);
       el("income").addEventListener("change", () => { reformatIncome(); doRender(); });
-      el("itype").addEventListener("change", doRender);
+      syncTypeToggle(el("itype").value || "net");
+      const onTypeClick = (ev) => {
+        const btn = ev.currentTarget;
+        const t = btn.getAttribute("data-type");
+        if (!t) return;
+        syncTypeToggle(t);
+        doRender();
+      };
+      if (el("typeGross")) el("typeGross").addEventListener("click", onTypeClick);
+      if (el("typeNet")) el("typeNet").addEventListener("click", onTypeClick);
+
       el("home").addEventListener("change", () => { reformatIncome(); doRender(); });
       el("dest").addEventListener("change", doRender);
 

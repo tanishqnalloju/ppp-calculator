@@ -112,13 +112,15 @@
           <span class="hint" id="currencyHint">Home-currency annual figure.</span>
         </label>
 
-        <label class="field" for="itype">
-          Type
-          <select id="itype">
-            <option value="net">Net (take-home)</option>
-            <option value="gross">Gross (before tax)</option>
-          </select>
-        </label>
+        <div class="field">
+          <span class="field-label" id="itypeLabel">Income type</span>
+          <div class="seg-toggle" role="group" aria-labelledby="itypeLabel">
+            <button type="button" class="seg-btn" data-type="gross" id="typeGross" aria-pressed="false">Gross</button>
+            <button type="button" class="seg-btn is-active" data-type="net" id="typeNet" aria-pressed="true">Net</button>
+          </div>
+          <input type="hidden" id="itype" value="net" />
+          <span class="hint" id="itypeHint">Net = take-home. Gross = before tax (runs the estimate).</span>
+        </div>
 
         <div id="deductionFields" class="deduction-fields hidden">
           <label class="field" for="deductionMode">

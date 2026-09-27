@@ -421,6 +421,117 @@ select:hover { border-color: var(--border-strong); }
   color: var(--text-on-answer);
 }
 
+
+/* —— Segmented Gross | Net toggle —— */
+.field-label {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+.seg-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  max-width: 16rem;
+}
+.seg-btn {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+}
+.seg-btn:hover { color: var(--text); }
+.seg-btn.is-active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-sm);
+}
+.seg-btn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* —— Collapsible tax columns —— */
+details.tax-col {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.tax-summary {
+  list-style: none;
+  cursor: pointer;
+  padding: var(--space-3) var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+  position: relative;
+  padding-right: 2.25rem;
+}
+.tax-summary::-webkit-details-marker { display: none; }
+.tax-summary .tax-col-title {
+  margin: 0;
+  color: var(--text);
+}
+.tax-summary-metrics {
+  display: grid;
+  gap: var(--space-1);
+}
+.tax-chevron {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-right: 2px solid var(--text-secondary);
+  border-bottom: 2px solid var(--text-secondary);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+details.tax-col[open] .tax-chevron {
+  transform: translateY(-30%) rotate(225deg);
+}
+.tax-details {
+  padding: 0 var(--space-4) var(--space-4);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+}
+[data-theme="dark"] details.tax-col {
+  background: var(--surface-answer);
+  border-color: var(--border-answer);
+  box-shadow: var(--shadow-answer);
+}
+[data-theme="dark"] .tax-summary .tax-col-title,
+[data-theme="dark"] .tax-summary-metrics .tax-row,
+[data-theme="dark"] .tax-summary-metrics .tax-row b {
+  color: var(--text-on-answer);
+}
+[data-theme="dark"] .tax-details {
+  border-top-color: var(--border-answer);
+}
+[data-theme="dark"] .tax-chevron {
+  border-color: var(--text-muted-on-answer);
+}
+[data-theme="dark"] .seg-toggle {
+  background: var(--surface-soft);
+}
+[data-theme="dark"] .seg-btn.is-active {
+  background: var(--surface);
+  color: var(--text);
+}
+
 /* —— Illustrative tax panel —— */
 .tax-panel {
   margin-bottom: var(--space-6);
