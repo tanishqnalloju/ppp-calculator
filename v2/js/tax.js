@@ -33,7 +33,35 @@
   function clampCustomPct(pct) {
     const n = Number(pct);
     if (!Number.isFinite(n)) return 0;
-    return Math.max(0, Math.min(50, n));
+    return Math.max(0, Math.min(100, n));
+  }
+
+  function clampCustomAmount(amount, gross) {
+    const g = Math.max(0, Number(gross) || 0);
+    const n = Number(amount);
+    if (!Number.isFinite(n) || n <= 0) return 0;
+    return Math.min(g, n);
+  }
+
+  function resolveCustomDeduction(gross, opts) {
+    opts = opts || {};
+    const g = Math.max(0, Number(gross) || 0);
+    const unit = opts.customUnit === "amount" ? "amount" : "pct";
+    if (unit === "amount") {
+      return {
+        amount: clampCustomAmount(opts.customAmount, g),
+        unit,
+        pct: null,
+        label: null,
+      };
+    }
+    const pct = clampCustomPct(opts.customPct);
+    return {
+      amount: g * (pct / 100),
+      unit,
+      pct,
+      label: null,
+    };
   }
 
   function resolveTypicalDeduction(gross, country) {
@@ -56,7 +84,7 @@
    * When allowance_in_brackets and mode is standard (or typical falling back),
    * do not subtract standard_deduction again.
    */
-  function taxableIncome(gross, country, deductionMode, customPct) {
+  function taxableIncome(gross, country, deductionMode, customOpts) {
     const g = Math.max(0, Number(gross) || 0);
     if (!country) return g;
     const mode = deductionMode || "standard";
@@ -65,7 +93,11 @@
     if (mode === "none") {
       ded = 0;
     } else if (mode === "custom") {
-      ded = g * (clampCustomPct(customPct) / 100);
+      // customOpts may be a bare pct number (legacy) or { customPct, customAmount, customUnit }
+      const opts = (customOpts && typeof customOpts === "object")
+        ? customOpts
+        : { customPct: customOpts, customUnit: "pct" };
+      ded = resolveCustomDeduction(g, opts).amount;
     } else if (mode === "typical") {
       const typical = resolveTypicalDeduction(g, country);
       if (typical != null) {
@@ -130,14 +162,31 @@
     return pitBreakdown(taxable, brackets).pit;
   }
 
-  function deductionDetail(gross, country, deductionMode, customPct) {
+  function deductionDetail(gross, country, deductionMode, customOpts) {
     const g = Math.max(0, Number(gross) || 0);
     if (!country) return { amount: 0, label: "None", mode: deductionMode || "standard" };
     const mode = deductionMode || "standard";
     if (mode === "none") return { amount: 0, label: "None", mode };
     if (mode === "custom") {
-      const pct = clampCustomPct(customPct);
-      return { amount: g * (pct / 100), label: `Custom ${pct}% of gross`, mode, pct };
+      const opts = (customOpts && typeof customOpts === "object")
+        ? customOpts
+        : { customPct: customOpts, customUnit: "pct" };
+      const resolved = resolveCustomDeduction(g, opts);
+      if (resolved.unit === "amount") {
+        return {
+          amount: resolved.amount,
+          label: "Custom amount",
+          mode,
+          unit: "amount",
+        };
+      }
+      return {
+        amount: resolved.amount,
+        label: `Custom ${resolved.pct}% of gross`,
+        mode,
+        pct: resolved.pct,
+        unit: "pct",
+      };
     }
     if (mode === "typical") {
       const typical = resolveTypicalDeduction(g, country);
@@ -241,9 +290,13 @@
     }
 
     const mode = opts.deductionMode || "standard";
-    const customPct = opts.customPct;
-    const deduction = deductionDetail(g, country, mode, customPct);
-    const taxable = taxableIncome(g, country, mode, customPct);
+    const customOpts = {
+      customPct: opts.customPct,
+      customAmount: opts.customAmount,
+      customUnit: opts.customUnit || "pct",
+    };
+    const deduction = deductionDetail(g, country, mode, customOpts);
+    const taxable = taxableIncome(g, country, mode, customOpts);
     const br = pitBreakdown(taxable, country.brackets);
     let pit = br.pit;
     // Rebate uses total income after deductions (taxable + any zero-rated allowance already in brackets ≈ gross - explicit deduction)
@@ -354,6 +407,8 @@
       netToGross,
       hasTypicalExtra,
       clampCustomPct,
+      clampCustomAmount,
+      resolveCustomDeduction,
       get meta() { return TAX_META; },
       get loaded() { return TAX_LOADED; },
     },

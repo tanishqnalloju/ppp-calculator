@@ -13,15 +13,17 @@
   let urlTimer = null;
 
   function getState() {
-    const dedEl = el("deductionMode");
-    const pctEl = el("deductionPct");
     return {
       income: el("income").value,
       home: el("home").value,
       type: el("itype").value,
       dest: el("dest").value,
-      deduction: dedEl ? dedEl.value : "standard",
-      deduction_pct: pctEl ? pctEl.value : "10",
+      deduction_home: el("dedHome") ? el("dedHome").value : "standard",
+      deduction_dest: el("dedDest") ? el("dedDest").value : "standard",
+      custom_home: el("customHome") ? el("customHome").value : "10",
+      custom_dest: el("customDest") ? el("customDest").value : "10",
+      custom_home_unit: el("customHomeUnit") ? el("customHomeUnit").value : "pct",
+      custom_dest_unit: el("customDestUnit") ? el("customDestUnit").value : "pct",
     };
   }
 
@@ -71,6 +73,16 @@
     if (!h || !d) return;
     homePicker.setValue(d, true);
     destPicker.setValue(h, true);
+    // Swap per-country deduction assumptions with the countries
+    const swapPair = (a, b) => {
+      if (!el(a) || !el(b)) return;
+      const t = el(a).value;
+      el(a).value = el(b).value;
+      el(b).value = t;
+    };
+    swapPair("dedHome", "dedDest");
+    swapPair("customHome", "customDest");
+    swapPair("customHomeUnit", "customDestUnit");
     reformatIncome();
     doRender();
   }
@@ -93,16 +105,6 @@
         PPP.render.showStatus("Could not copy link.", "warn");
       }
     }
-  }
-
-  function onDeductionChange() {
-    const mode = el("deductionMode");
-    const wrap = el("customPctWrap");
-    if (wrap) {
-      if (mode && mode.value === "custom") wrap.classList.remove("hidden");
-      else wrap.classList.add("hidden");
-    }
-    doRender();
   }
 
   async function init() {
@@ -158,8 +160,12 @@
         setDest: (iso, silent) => destPicker.setValue(iso, silent),
         setIncome: (v) => { el("income").value = v; },
         getHome: () => el("home").value,
-        setDeduction: (d) => { if (el("deductionMode")) el("deductionMode").value = d; },
-        setDeductionPct: (p) => { if (el("deductionPct")) el("deductionPct").value = p; },
+        setDedHome: (d) => { if (el("dedHome")) el("dedHome").value = d; },
+        setDedDest: (d) => { if (el("dedDest")) el("dedDest").value = d; },
+        setCustomHome: (v) => { if (el("customHome")) el("customHome").value = v; },
+        setCustomDest: (v) => { if (el("customDest")) el("customDest").value = v; },
+        setCustomHomeUnit: (u) => { if (el("customHomeUnit")) el("customHomeUnit").value = u; },
+        setCustomDestUnit: (u) => { if (el("customDestUnit")) el("customDestUnit").value = u; },
       });
 
       el("income").addEventListener("input", doRender);
@@ -178,13 +184,7 @@
       el("home").addEventListener("change", () => { reformatIncome(); doRender(); });
       el("dest").addEventListener("change", doRender);
 
-      const dedMode = el("deductionMode");
-      if (dedMode) dedMode.addEventListener("change", onDeductionChange);
-      const dedPct = el("deductionPct");
-      if (dedPct) {
-        dedPct.addEventListener("input", doRender);
-        dedPct.addEventListener("change", doRender);
-      }
+      PPP._rerender = doRender;
 
       const swapBtn = el("swapBtn");
       if (swapBtn) swapBtn.addEventListener("click", swapCountries);
@@ -195,9 +195,6 @@
         const home = byIso[el("home").value];
         el("income").value = PPP.formatIncomeInput(DEFAULT_INCOME, home && home.currency, home && home.iso3);
       }
-
-      // Ensure custom pct wrap matches mode after URL read
-      onDeductionChange();
 
       PPP.render.showStatus(null);
       doRender();

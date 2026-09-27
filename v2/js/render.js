@@ -123,11 +123,62 @@
     s.setAttribute("data-kind", kind || "warn");
   }
 
-  function taxOpts(state) {
+  function taxOptsFor(state, side) {
+    const mode = (side === "dest" ? state.deduction_dest : state.deduction_home) || "standard";
+    const unit = (side === "dest" ? state.custom_dest_unit : state.custom_home_unit) || "pct";
+    const raw = side === "dest" ? state.custom_dest : state.custom_home;
     return {
-      deductionMode: state.deduction || "standard",
-      customPct: state.deduction_pct,
+      deductionMode: mode,
+      customUnit: unit === "amount" ? "amount" : "pct",
+      customPct: raw,
+      customAmount: raw,
     };
+  }
+
+  function renderDeductionControls(side, state, country, currency, iso3, baseGross) {
+    const escapeHtml = global.PPP.escapeHtml;
+    const mode = (side === "dest" ? state.deduction_dest : state.deduction_home) || "standard";
+    const unit = (side === "dest" ? state.custom_dest_unit : state.custom_home_unit) || "pct";
+    const raw = side === "dest" ? state.custom_dest : state.custom_home;
+    const label = side === "dest" ? "Destination" : "Home";
+    const name = country && country.name ? country.name : label;
+    const hasTypical = global.PPP.tax && global.PPP.tax.hasTypicalExtra(iso3);
+
+    const opts = [
+      ("none", "None"),
+      ("standard", "Standard"),
+      ("typical", "Typical extra"),
+      ("custom", "Custom"),
+    ].filter(([v]) => v !== "typical" || hasTypical || mode === "typical")
+     .map(([v, lab]) =>
+       `<option value="${v}"${mode === v ? " selected" : ""}${v === "typical" && !hasTypical ? " disabled" : ""}>${lab}</option>`
+     ).join("");
+
+    const isPct = unit !== "amount";
+    const unitLabel = isPct ? "%" : escapeHtml(currency || "");
+    const customHidden = mode === "custom" ? "" : " hidden";
+    const step = isPct ? "0.1" : "1";
+    const min = "0";
+    const max = isPct ? "100" : "";
+
+    return (
+      `<div class="tax-ded-side" data-ded-side="${side}">` +
+      `<div class="tax-ded-side-label">${escapeHtml(label)} · ${escapeHtml(name)}</div>` +
+      `<label class="tax-ded-field">` +
+      `<span class="tax-ded-field-label">Deduction</span>` +
+      `<select data-ded="mode" data-side="${side}" aria-label="${escapeHtml(label)} deduction mode">${opts}</select>` +
+      `</label>` +
+      `<div class="tax-ded-custom${customHidden}" data-ded-custom="${side}">` +
+      `<span class="tax-ded-field-label">Custom</span>` +
+      `<div class="tax-ded-custom-row">` +
+      `<input type="number" data-ded="value" data-side="${side}" value="${escapeHtml(String(raw ?? ""))}" min="${min}"${max ? ` max="${max}"` : ""} step="${step}" inputmode="decimal" aria-label="${escapeHtml(label)} custom deduction" />` +
+      `<div class="seg-toggle tax-ded-unit" role="group" aria-label="Custom unit">` +
+      `<button type="button" class="seg-btn${isPct ? " is-active" : ""}" data-ded-unit="pct" data-side="${side}" aria-pressed="${isPct ? "true" : "false"}">%</button>` +
+      `<button type="button" class="seg-btn${!isPct ? " is-active" : ""}" data-ded-unit="amount" data-side="${side}" aria-pressed="${!isPct ? "true" : "false"}">${unitLabel === "%" ? "Amt" : unitLabel}</button>` +
+      `</div></div>` +
+      `<span class="hint">${isPct ? "Percent of gross (0–100)." : "Fixed amount in " + escapeHtml(currency || "local currency") + "."}</span>` +
+      `</div></div>`
+    );
   }
 
   function fmtPct(rate) {
@@ -262,6 +313,22 @@
     }, true);
   }
 
+
+  function ensureTaxPanelShell(panel) {
+    if (panel.querySelector("[data-tax-shell]")) return;
+    panel.innerHTML =
+      `<div data-tax-shell="1">` +
+      `<h2 class="tax-heading">Illustrative tax estimates</h2>` +
+      `<p class="tax-disclaimer" id="taxDedNote"></p>` +
+      `<div id="taxDeductionMount"></div>` +
+      `<div id="taxResultsMount"></div>` +
+      `<div id="taxWarnMount"></div>` +
+      `<p class="tax-disclaimer" id="taxFootNote">Illustrative national/federal PIT model only. Local/state taxes and many social contributions are often excluded. <strong>Not tax advice</strong> — not personalized. Sources: PwC Worldwide Tax Summaries (see About / <code>data/taxes.json</code>).</p>` +
+      `</div>`;
+    panel.dataset.dedBound = "";
+    panel.dataset.taxBound = "";
+  }
+
   function renderTaxPanel(ctx) {
     const panel = el("taxPanel");
     if (!panel) return;
@@ -269,16 +336,28 @@
     const {
       home, dest, itype, incomeLocal, netForPpp, homeTax, destGross,
       homeSupported, destSupported, homeTaxCountry, destTaxCountry, taxUnavailable,
+      state: stateIn,
     } = ctx;
     const escapeHtml = global.PPP.escapeHtml;
+    const state = stateIn || {
+      deduction_home: "standard",
+      deduction_dest: "standard",
+      custom_home: "10",
+      custom_dest: "10",
+      custom_home_unit: "pct",
+      custom_dest_unit: "pct",
+    };
 
     if (!(incomeLocal > 0)) {
       panel.classList.add("hidden");
       panel.innerHTML = "";
+      panel.dataset.dedBound = "";
+      panel.dataset.taxBound = "";
       return;
     }
 
     panel.classList.remove("hidden");
+    ensureTaxPanelShell(panel);
     const warnings = [];
     if (itype === "gross" && !homeSupported) {
       warnings.push(
@@ -363,68 +442,165 @@
       : "";
 
     const dedNote = itype === "gross"
-      ? "Deduction assumption applies to Gross home conversion and destination gross-up."
-      : "Deduction controls are hidden in Net mode; destination gross-up uses the standard allowance only.";
+      ? "Set a deduction per country below. Home applies to gross→net; destination applies to the PPP gross-up. Expand for the full calculation."
+      : "Destination deduction applies to the PPP gross-up. Switch to Gross to run a home tax estimate with its own deduction. Expand for the full calculation.";
 
     const open = !!(global.PPP._taxOpen && global.PPP._taxOpen.both);
 
-    panel.innerHTML =
-      `<h2 class="tax-heading">Illustrative tax estimates</h2>` +
-      `<p class="tax-disclaimer">${dedNote} Expand for the full calculation.</p>` +
-      `<details class="tax-col" data-tax-key="both"${open ? " open" : ""}>` +
-      `<summary class="tax-summary">` +
-      `<span class="tax-col-title">Home &amp; destination</span>` +
-      `<div class="tax-summary-metrics tax-summary-both">` +
-      `<div class="tax-sum-pair"><span class="tax-sum-label">Home</span>` +
-      `<div class="tax-row"><span>Est. tax</span><b>${homeSumTax}</b></div>` +
-      `<div class="tax-row"><span>Est. net</span><b>${homeSumNet}</b></div></div>` +
-      `<div class="tax-sum-pair"><span class="tax-sum-label">Dest</span>` +
-      `<div class="tax-row"><span>Est. tax</span><b>${destSumTax}</b></div>` +
-      `<div class="tax-row"><span>Est. net</span><b>${destSumNet}</b></div></div>` +
-      `</div>` +
-      `<span class="tax-chevron" aria-hidden="true"></span>` +
-      `</summary>` +
-      `<div class="tax-details tax-details-both">` +
-      `<div class="tax-grid">${homeBlock}${destBlock}</div>` +
-      `</div></details>` +
-      warnHtml +
-      `<p class="tax-disclaimer">Illustrative national/federal PIT model only. Local/state taxes and many social contributions are often excluded. <strong>Not tax advice</strong> — not personalized. Sources: PwC Worldwide Tax Summaries (see About / <code>data/taxes.json</code>).</p>`;
-    bindTaxCollapse(panel);
-  }
+    const homeBase = incomeLocal || 0;
+    const destBase = (destGross && destGross.gross) || 0;
+    panel.setAttribute("data-ded-base-home", String(homeBase || 0));
+    panel.setAttribute("data-ded-base-dest", String(destBase || 0));
 
-  function syncDeductionUi(state, homeIso, destIso) {
-    const modeEl = el("deductionMode");
-    const customWrap = el("customPctWrap");
-    const typicalOpt = el("deductionTypicalOpt");
-    const dedWrap = el("deductionFields");
-    const itype = (state && state.type) || "net";
-    const grossMode = itype === "gross";
+    const noteEl = el("taxDedNote");
+    if (noteEl) noteEl.textContent = dedNote;
 
-    if (dedWrap) {
-      if (grossMode) dedWrap.classList.remove("hidden");
-      else dedWrap.classList.add("hidden");
-    }
-    if (!modeEl) return;
+    const dedMount = el("taxDeductionMount");
+    const active = panel.querySelector("input[data-ded=\"value\"]:focus, select[data-ded=\"mode\"]:focus");
+    const focusSide = active && active.getAttribute("data-side");
+    const focusKind = active && active.getAttribute("data-ded");
+    const focusPos = (active && active.selectionStart != null) ? active.selectionStart : null;
 
-    // Deduction controls only apply in Gross mode (home conversion + dest gross-up).
-    modeEl.disabled = !grossMode;
-    const pctEl = el("deductionPct");
-    if (pctEl) pctEl.disabled = !grossMode;
-
-    const hasTypical =
-      grossMode && global.PPP.tax &&
-      (global.PPP.tax.hasTypicalExtra(homeIso) || global.PPP.tax.hasTypicalExtra(destIso));
-    if (typicalOpt) {
-      typicalOpt.disabled = !hasTypical;
-      typicalOpt.hidden = !hasTypical;
-      if (!hasTypical && modeEl.value === "typical") {
-        modeEl.value = "standard";
+    if (dedMount) {
+      const fp = [
+        home.iso3, dest.iso3, itype,
+        state.deduction_home, state.deduction_dest,
+        state.custom_home_unit, state.custom_dest_unit,
+        state.custom_home, state.custom_dest,
+      ].join("|");
+      if (dedMount.dataset.fp !== fp) {
+        dedMount.dataset.fp = fp;
+        dedMount.innerHTML =
+          `<div class="tax-ded-panel">` +
+          `<p class="tax-ded-heading">Deduction assumption</p>` +
+          `<div class="tax-ded-grid">` +
+          renderDeductionControls("home", state, home, home.currency, home.iso3, homeBase) +
+          renderDeductionControls("dest", state, dest, dest.currency, dest.iso3, destBase) +
+          `</div></div>`;
+      } else {
+        // Keep live values in sync without remounting (focus-safe)
+        for (const side of ["home", "dest"]) {
+          const mode = side === "dest" ? state.deduction_dest : state.deduction_home;
+          const wrap = dedMount.querySelector(`[data-ded-custom="${side}"]`);
+          if (wrap) wrap.classList.toggle("hidden", mode !== "custom");
+        }
       }
     }
-    if (customWrap) {
-      if (grossMode && modeEl.value === "custom") customWrap.classList.remove("hidden");
-      else customWrap.classList.add("hidden");
+
+    const results = el("taxResultsMount");
+    if (results) {
+      results.innerHTML =
+        `<details class="tax-col" data-tax-key="both"${open ? " open" : ""}>` +
+        `<summary class="tax-summary">` +
+        `<span class="tax-col-title">Home &amp; destination</span>` +
+        `<div class="tax-summary-metrics tax-summary-both">` +
+        `<div class="tax-sum-pair"><span class="tax-sum-label">Home</span>` +
+        `<div class="tax-row"><span>Est. tax</span><b>${homeSumTax}</b></div>` +
+        `<div class="tax-row"><span>Est. net</span><b>${homeSumNet}</b></div></div>` +
+        `<div class="tax-sum-pair"><span class="tax-sum-label">Dest</span>` +
+        `<div class="tax-row"><span>Est. tax</span><b>${destSumTax}</b></div>` +
+        `<div class="tax-row"><span>Est. net</span><b>${destSumNet}</b></div></div>` +
+        `</div>` +
+        `<span class="tax-chevron" aria-hidden="true"></span>` +
+        `</summary>` +
+        `<div class="tax-details tax-details-both">` +
+        `<div class="tax-grid">${homeBlock}${destBlock}</div>` +
+        `</div></details>`;
     }
+
+    const warnMount = el("taxWarnMount");
+    if (warnMount) warnMount.innerHTML = warnHtml;
+
+    if (focusSide && focusKind && dedMount) {
+      const sel = dedMount.querySelector(`[data-ded="${focusKind}"][data-side="${focusSide}"]`);
+      if (sel) {
+        sel.focus();
+        if (focusPos != null && sel.setSelectionRange) {
+          try { sel.setSelectionRange(focusPos, focusPos); } catch (_) {}
+        }
+      }
+    }
+
+    bindTaxCollapse(panel);
+    bindTaxDeduction(panel);
+  }
+
+  function syncDeductionUi() {
+    // Deduction UI now lives inside the tax panel (see renderDeductionControls).
+  }
+
+  function setHiddenDed(side, key, value) {
+    const map = {
+      mode: side === "dest" ? "dedDest" : "dedHome",
+      value: side === "dest" ? "customDest" : "customHome",
+      unit: side === "dest" ? "customDestUnit" : "customHomeUnit",
+    };
+    const id = map[key];
+    const node = id && el(id);
+    if (node) node.value = String(value);
+  }
+
+  function bindTaxDeduction(panel) {
+    if (!panel || panel.dataset.dedBound === "1") return;
+    panel.dataset.dedBound = "1";
+
+    const rerender = () => {
+      if (typeof global.PPP._rerender === "function") global.PPP._rerender();
+    };
+
+    panel.addEventListener("change", (ev) => {
+      const t = ev.target;
+      if (!(t instanceof HTMLElement)) return;
+      if (t.matches("select[data-ded=\"mode\"]")) {
+        const side = t.getAttribute("data-side");
+        setHiddenDed(side, "mode", t.value);
+        rerender();
+      }
+    });
+
+    let inputTimer = null;
+    panel.addEventListener("input", (ev) => {
+      const t = ev.target;
+      if (!(t instanceof HTMLElement)) return;
+      if (t.matches("input[data-ded=\"value\"]")) {
+        const side = t.getAttribute("data-side");
+        setHiddenDed(side, "value", t.value);
+        clearTimeout(inputTimer);
+        inputTimer = setTimeout(rerender, 180);
+      }
+    });
+
+    panel.addEventListener("click", (ev) => {
+      const btn = ev.target && ev.target.closest && ev.target.closest("button[data-ded-unit]");
+      if (!btn || !panel.contains(btn)) return;
+      ev.preventDefault();
+      const side = btn.getAttribute("data-side");
+      const nextUnit = btn.getAttribute("data-ded-unit");
+      if (!side || (nextUnit !== "pct" && nextUnit !== "amount")) return;
+
+      const unitEl = el(side === "dest" ? "customDestUnit" : "customHomeUnit");
+      const valEl = el(side === "dest" ? "customDest" : "customHome");
+      const prevUnit = unitEl ? unitEl.value : "pct";
+      if (prevUnit === nextUnit) return;
+
+      const base = Number(panel.getAttribute(side === "dest" ? "data-ded-base-dest" : "data-ded-base-home")) || 0;
+      let val = Number(valEl && valEl.value);
+      if (!Number.isFinite(val)) val = 0;
+
+      if (nextUnit === "amount" && prevUnit === "pct" && base > 0) {
+        const pct = global.PPP.tax ? global.PPP.tax.clampCustomPct(val) : Math.max(0, Math.min(100, val));
+        val = Math.round(base * (pct / 100));
+      } else if (nextUnit === "pct" && prevUnit === "amount" && base > 0) {
+        val = global.PPP.tax
+          ? global.PPP.tax.clampCustomPct((val / base) * 100)
+          : Math.max(0, Math.min(100, (val / base) * 100));
+        val = Math.round(val * 10) / 10;
+      }
+
+      setHiddenDed(side, "unit", nextUnit);
+      setHiddenDed(side, "value", val);
+      rerender();
+    });
   }
 
   function render(ctx) {
@@ -466,7 +642,7 @@
       const delta = el("deltaNote");
       if (delta) { delta.textContent = ""; delta.classList.add("hidden"); }
       if (!ev.reliable) showStatus(ev.reason || "Data unreliable for this pair.", "warn");
-      renderTaxPanel({ home, dest, itype: state.type || "net", incomeLocal: 0 });
+      renderTaxPanel({ home, dest, itype: state.type || "net", incomeLocal: 0, state });
       writeUrlDebounced();
       return;
     }
@@ -475,7 +651,8 @@
     if (incomeLocal > global.PPP.INCOME_MAX) incomeLocal = global.PPP.INCOME_MAX;
 
     const itype = state.type || "net";
-    const opts = taxOpts(state);
+    const homeOpts = taxOptsFor(state, "home");
+    const destOpts = taxOptsFor(state, "dest");
     const taxApi = global.PPP.tax;
     const homeTaxCountry = taxApi ? taxApi.getTax(home.iso3) : null;
     const destTaxCountry = taxApi ? taxApi.getTax(dest.iso3) : null;
@@ -488,7 +665,7 @@
 
     if (itype === "gross") {
       if (homeSupported && taxApi) {
-        homeTax = taxApi.grossToNet(incomeLocal, homeTaxCountry, opts);
+        homeTax = taxApi.grossToNet(incomeLocal, homeTaxCountry, homeOpts);
         netForPpp = homeTax.net;
       } else {
         taxUnavailable = true;
@@ -497,9 +674,6 @@
     }
 
     const r = global.PPP.compute(home, dest, netForPpp);
-
-    // Deduction tweaks only in Gross mode. Net mode dest gross-up uses standard.
-    const destOpts = itype === "gross" ? opts : { deductionMode: "standard", customPct: 0 };
 
     let destGross = null;
     if (r.reliable && r.equiv != null && destSupported && taxApi) {
@@ -517,7 +691,7 @@
       renderTaxPanel({
         home, dest, itype, incomeLocal, netForPpp, homeTax, destGross: null,
         homeSupported, destSupported, homeTaxCountry, destTaxCountry, taxUnavailable,
-        pppEquiv: null,
+        pppEquiv: null, state,
       });
       writeUrlDebounced();
       return;
@@ -563,7 +737,7 @@
     renderTaxPanel({
       home, dest, itype, incomeLocal, netForPpp, homeTax, destGross,
       homeSupported, destSupported, homeTaxCountry, destTaxCountry, taxUnavailable,
-      pppEquiv: r.equiv,
+      pppEquiv: r.equiv, state,
     });
 
     writeUrlDebounced();

@@ -32,20 +32,35 @@
     const type = q.get("type");
     const homeIso = resolveCountryCode(q.get("home"), byIso);
     const destIso = resolveCountryCode(q.get("dest"), byIso);
-    const deduction = q.get("deduction");
-    const deductionPct = q.get("deduction_pct");
+    const deduction = q.get("deduction"); // legacy shared
+    const deductionPct = q.get("deduction_pct"); // legacy
+    const dedHome = q.get("ded_home") || deduction;
+    const dedDest = q.get("ded_dest") || deduction;
+    const customHome = q.get("custom_home") != null ? q.get("custom_home") : deductionPct;
+    const customDest = q.get("custom_dest") != null ? q.get("custom_dest") : deductionPct;
+    const customHomeUnit = q.get("custom_home_unit") || "pct";
+    const customDestUnit = q.get("custom_dest_unit") || "pct";
 
     if (type === "gross" || type === "net") setters.setType(type);
     if (homeIso) setters.setHome(homeIso, true);
     if (destIso) setters.setDest(destIso, true);
-    if (deduction && DEDUCTION_MODES.includes(deduction) && setters.setDeduction) {
-      setters.setDeduction(deduction);
+    if (dedHome && DEDUCTION_MODES.includes(dedHome) && setters.setDedHome) {
+      setters.setDedHome(dedHome);
     }
-    if (deductionPct != null && deductionPct !== "" && setters.setDeductionPct) {
-      const pct = global.PPP.tax
-        ? global.PPP.tax.clampCustomPct(deductionPct)
-        : Math.max(0, Math.min(50, Number(deductionPct) || 0));
-      setters.setDeductionPct(String(pct));
+    if (dedDest && DEDUCTION_MODES.includes(dedDest) && setters.setDedDest) {
+      setters.setDedDest(dedDest);
+    }
+    if (customHome != null && customHome !== "" && setters.setCustomHome) {
+      setters.setCustomHome(String(customHome));
+    }
+    if (customDest != null && customDest !== "" && setters.setCustomDest) {
+      setters.setCustomDest(String(customDest));
+    }
+    if (setters.setCustomHomeUnit && (customHomeUnit === "pct" || customHomeUnit === "amount")) {
+      setters.setCustomHomeUnit(customHomeUnit);
+    }
+    if (setters.setCustomDestUnit && (customDestUnit === "pct" || customDestUnit === "amount")) {
+      setters.setCustomDestUnit(customDestUnit);
     }
 
     if (incomeRaw) {
@@ -67,14 +82,26 @@
     q.set("home", state.home || DEFAULT_HOME);
     q.set("type", state.type || "net");
     q.set("dest", state.dest || DEFAULT_DEST);
-    const ded = state.deduction || "standard";
-    if (ded !== "standard") q.set("deduction", ded);
-    if (ded === "custom") {
-      const pct = global.PPP.tax
-        ? global.PPP.tax.clampCustomPct(state.deduction_pct)
-        : Math.max(0, Math.min(50, Number(state.deduction_pct) || 0));
-      q.set("deduction_pct", String(pct));
+    function writeSide(side, modeKey, valKey, unitKey, qMode, qVal, qUnit) {
+      const mode = state[modeKey] || "standard";
+      if (mode !== "standard") q.set(qMode, mode);
+      if (mode === "custom") {
+        const unit = state[unitKey] === "amount" ? "amount" : "pct";
+        const raw = Number(state[valKey]);
+        let v = raw;
+        if (unit === "pct") {
+          v = global.PPP.tax
+            ? global.PPP.tax.clampCustomPct(raw)
+            : Math.max(0, Math.min(100, Number.isFinite(raw) ? raw : 0));
+        } else {
+          v = Math.max(0, Number.isFinite(raw) ? raw : 0);
+        }
+        q.set(qVal, String(v));
+        if (unit !== "pct") q.set(qUnit, unit);
+      }
     }
+    writeSide("home", "deduction_home", "custom_home", "custom_home_unit", "ded_home", "custom_home", "custom_home_unit");
+    writeSide("dest", "deduction_dest", "custom_dest", "custom_dest_unit", "ded_dest", "custom_dest", "custom_dest_unit");
     return q;
   }
 
