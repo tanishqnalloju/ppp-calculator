@@ -232,6 +232,7 @@
       notes: null,
       rebate: 0,
       cess: 0,
+      additionalTax: 0,
       pitBeforeRebate: 0,
     }, extras || {});
   }
@@ -255,6 +256,22 @@
     if (!cess || cess.rate == null) return { cess: 0, total: taxBeforeCess, label: null };
     const c = Math.max(0, taxBeforeCess) * (Number(cess.rate) || 0);
     return { cess: c, total: taxBeforeCess + c, label: cess.label || "Cess" };
+  }
+
+  /** Flat add-on tax (e.g. illustrative avg. state PIT). base: taxable | gross */
+  function applyAdditionalTax(gross, taxable, cfg) {
+    if (!cfg || cfg.rate == null) {
+      return { amount: 0, label: null, rate: 0 };
+    }
+    const rate = Math.max(0, Number(cfg.rate) || 0);
+    const baseKey = cfg.base === "gross" ? "gross" : "taxable";
+    const base = baseKey === "gross" ? Math.max(0, Number(gross) || 0) : Math.max(0, Number(taxable) || 0);
+    return {
+      amount: base * rate,
+      label: cfg.label || "Additional tax",
+      rate,
+      base: baseKey,
+    };
   }
 
   function grossToNet(gross, country, opts) {
@@ -305,8 +322,9 @@
     pit = reb.pit;
     const cessPart = applyCess(pit, country.cess);
     const pitWithCess = cessPart.total;
+    const addPart = applyAdditionalTax(g, taxable, country.additional_tax);
     const ss = applyEmployeeSs(g, country.employee_ss);
-    const totalTax = pitWithCess + ss;
+    const totalTax = pitWithCess + addPart.amount + ss;
     const net = g - totalTax;
     const effectiveRate = g > 0 ? totalTax / g : 0;
 
@@ -319,6 +337,9 @@
       rebateLabel: reb.label,
       cess: cessPart.cess,
       cessLabel: cessPart.label,
+      additionalTax: addPart.amount,
+      additionalTaxLabel: addPart.label,
+      additionalTaxRate: addPart.rate,
       ss,
       totalTax,
       net,
@@ -402,6 +423,7 @@
       deductionDetail,
       applyRebate,
       applyCess,
+      applyAdditionalTax,
       applyEmployeeSs,
       grossToNet,
       netToGross,

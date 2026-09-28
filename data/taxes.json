@@ -1,7 +1,7 @@
 {
   "meta": {
     "updated": "2026-09-28",
-    "disclaimer": "Illustrative national/federal personal income tax models for PPP context only. Local/state/municipal taxes, many social contributions, credits, rebates, and filing status are often excluded. Not tax advice. Not personalized. Figures will differ from real take-home pay.",
+    "disclaimer": "Illustrative national/federal personal income tax models for PPP context only. Local/municipal taxes, many social contributions, credits, rebates, and filing status are often excluded. USA includes a flat illustrative average state income tax; other countries remain federal/national PIT only unless noted. Not tax advice. Not personalized. Figures will differ from real take-home pay.",
     "primary_source": "PwC Worldwide Tax Summaries"
   },
   "countries": [
@@ -101,7 +101,12 @@
       "allowance_in_brackets": false,
       "typical_extra_deduction": null,
       "employee_ss": null,
-      "notes": "Federal income tax only, single filer. State/local income tax and FICA/payroll taxes excluded.",
+      "additional_tax": {
+        "label": "Avg. state income tax",
+        "rate": 0.04,
+        "base": "taxable"
+      },
+      "notes": "Federal PIT (single filer) plus a flat 4% illustrative average state income tax on taxable income. Real state rates range from 0% to ~13%+; local income tax and FICA/payroll taxes excluded.",
       "source_url": "https://taxsummaries.pwc.com/united-states/individual/taxes-on-personal-income"
     },
     {

@@ -269,6 +269,10 @@
       ? `<div class="tax-row"><span>${escapeHtml(result.cessLabel || "Cess")}</span>` +
         `<b>${escapeHtml(global.PPP.fmtMoney(result.cess, currency, iso3))}</b></div>`
       : "";
+    const addTaxRow = result.additionalTax > 0
+      ? `<div class="tax-row"><span>${escapeHtml(result.additionalTaxLabel || "Additional tax")}</span>` +
+        `<b>${escapeHtml(global.PPP.fmtMoney(result.additionalTax, currency, iso3))}</b></div>`
+      : "";
     const pitBefore = (!rebateZeros && result.pitBeforeRebate != null && result.rebate > 0)
       ? `<div class="tax-row"><span>PIT before rebate</span>` +
         `<b>${escapeHtml(global.PPP.fmtMoney(result.pitBeforeRebate, currency, iso3))}</b></div>`
@@ -290,6 +294,7 @@
       rebateRow +
       cessRow +
       `<div class="tax-row"><span>Est. PIT</span><b>${escapeHtml(global.PPP.fmtMoney(result.pit, currency, iso3))}</b></div>` +
+      addTaxRow +
       (result.ss > 0
         ? `<div class="tax-row"><span>Est. employee SS</span><b>${escapeHtml(global.PPP.fmtMoney(result.ss, currency, iso3))}</b></div>`
         : "") +
