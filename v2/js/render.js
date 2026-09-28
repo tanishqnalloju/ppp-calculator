@@ -304,13 +304,20 @@
     if (!panel || panel.dataset.taxBound === "1") return;
     panel.dataset.taxBound = "1";
     global.PPP._taxOpen = global.PPP._taxOpen || Object.create(null);
-    panel.addEventListener("toggle", (ev) => {
-      const d = ev.target;
-      if (!(d instanceof HTMLDetailsElement)) return;
-      const key = d.getAttribute("data-tax-key");
-      if (!key) return;
-      global.PPP._taxOpen[key] = d.open;
-    }, true);
+    panel.addEventListener("click", (ev) => {
+      const btn = ev.target && ev.target.closest && ev.target.closest("button.tax-show-more");
+      if (!btn || !panel.contains(btn)) return;
+      ev.preventDefault();
+      const key = btn.getAttribute("data-tax-key") || "both";
+      const col = btn.closest(".tax-col");
+      const details = col && col.querySelector(".tax-details");
+      const next = !(global.PPP._taxOpen && global.PPP._taxOpen[key]);
+      global.PPP._taxOpen[key] = next;
+      if (col) col.classList.toggle("is-open", next);
+      if (details) details.hidden = !next;
+      btn.setAttribute("aria-expanded", next ? "true" : "false");
+      btn.textContent = next ? "Show less" : "Show more";
+    });
   }
 
 
@@ -482,7 +489,7 @@
     if (footEl) footEl.classList.remove("hidden");
 
     const dedNote =
-      "Set a deduction per country below. Home applies to gross→net; destination applies to the PPP gross-up. Expand for the full calculation.";
+      "Set a deduction per country below. Home applies to gross→net; destination applies to the PPP gross-up. Show more for the full calculation.";
 
     const open = !!(global.PPP._taxOpen && global.PPP._taxOpen.both);
 
@@ -527,8 +534,8 @@
     if (results) {
       results.classList.remove("hidden");
       results.innerHTML =
-        `<details class="tax-col" data-tax-key="both"${open ? " open" : ""}>` +
-        `<summary class="tax-summary">` +
+        `<div class="tax-col${open ? " is-open" : ""}" data-tax-key="both">` +
+        `<div class="tax-summary">` +
         `<span class="tax-col-title">Home &amp; destination</span>` +
         `<div class="tax-summary-metrics tax-summary-both">` +
         `<div class="tax-sum-pair"><span class="tax-sum-label">Home</span>` +
@@ -538,11 +545,13 @@
         `<div class="tax-row"><span>Est. tax</span><b>${destSumTax}</b></div>` +
         `<div class="tax-row"><span>Est. net</span><b>${destSumNet}</b></div></div>` +
         `</div>` +
-        `<span class="tax-chevron" aria-hidden="true"></span>` +
-        `</summary>` +
-        `<div class="tax-details tax-details-both">` +
+        `</div>` +
+        `<button type="button" class="tax-show-more" data-tax-key="both" aria-expanded="${open ? "true" : "false"}">` +
+        `${open ? "Show less" : "Show more"}` +
+        `</button>` +
+        `<div class="tax-details tax-details-both"${open ? "" : " hidden"}>` +
         `<div class="tax-grid">${homeBlock}${destBlock}</div>` +
-        `</div></details>`;
+        `</div></div>`;
     }
 
     if (warnMount) warnMount.innerHTML = warnHtml;
