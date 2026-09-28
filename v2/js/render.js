@@ -335,7 +335,7 @@
       `<div id="taxDeductionMount"></div>` +
       `<div id="taxResultsMount"></div>` +
       `<div id="taxWarnMount"></div>` +
-      `<p class="tax-disclaimer" id="taxFootNote">Illustrative national/federal PIT model only. Local/state taxes and many social contributions are often excluded. <strong>Not tax advice</strong> — not personalized. Sources: PwC Worldwide Tax Summaries (see About / <code>data/taxes.json</code>).</p>` +
+      `<p class="tax-disclaimer" id="taxFootNote">Illustrative national/federal PIT model. USA includes a flat 4% illustrative avg. state income tax on taxable income; other local/state taxes and many social contributions are often excluded. <strong>Not tax advice</strong> — not personalized. Sources: PwC Worldwide Tax Summaries (see About / <code>data/taxes.json</code>).</p>` +
       `</div>`;
     panel.dataset.dedBound = "";
     panel.dataset.taxBound = "";
